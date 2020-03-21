@@ -67,7 +67,7 @@ export default {
                     title: '基础表格'
                 },
                 {
-                    icon: 'el-icon-lx-calendar',
+                    icon: 'el-icon-files',
                     index: '3',
                     title: '表单相关',
                     subs: [
