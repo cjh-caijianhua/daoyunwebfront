@@ -16,7 +16,7 @@
                     </div>
                     <div class="user-info-list">
                         上次登录地点：
-                        <span>福州</span>
+                        <span>福建福州</span>
                     </div>
                 </el-card>
             </el-col>

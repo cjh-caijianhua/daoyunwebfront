@@ -46,6 +46,13 @@ const routes = [{
         }
       },
       {
+        path: '/RoleManage',
+        component: () => import( /*webpackChunkName: "role" */ '../components/page/RoleManage.vue'),
+        meta: {
+          title: '角色管理'
+        }
+      },
+      {
         path: '/form',
         component: () => import( /*webpackChunkName: "form" */ '../components/page/BaseForm.vue'),
         meta:{

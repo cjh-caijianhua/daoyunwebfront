@@ -63,8 +63,28 @@ export default {
                 },
                 {
                     icon: 'el-icon-tickets',
+                    index: 'role',
+                    title: '角色管理'
+                },
+                {
+                    icon: 'el-icon-tickets',
                     index: 'table',
-                    title: '基础表格'
+                    title: '学生管理'
+                },
+                {
+                    icon: 'el-icon-tickets',
+                    index: 'test1',
+                    title: '教师管理'
+                },
+                {
+                    icon: 'el-icon-tickets',
+                    index: 'test1',
+                    title: '课程管理'
+                },
+                {
+                    icon: 'el-icon-tickets',
+                    index: 'test1',
+                    title: '数据字典管理'
                 },
                 {
                     icon: 'el-icon-files',

@@ -2,45 +2,45 @@
     "list": [{
             "id": 1,
             "name": "陈泽林",
+            "role": "超级管理员",
             "school": "福州大学",
-            "address": "aaa",
-            "state": "成功",
+            "state": "可用",
             "date": "2019-11-1",
             "thumb": ""
         },
         {
             "id": 2,
             "name": "陈赐阳",
-            "school": "福州大学",
-            "address": "bbb",
-            "state": "成功",
+            "role": "教师",
+            "school": "福建师范大学",
+            "state": "可用",
             "date": "2019-10-11",
             "thumb": ""
         },
         {
             "id": 3,
             "name": "陈敏",
+            "role": "学生",
             "school": "福州大学",
-            "address": "ccc",
-            "state": "失败",
+            "state": "不可用",
             "date": "2019-11-11",
             "thumb": ""
         },
         {
             "id": 4,
             "name": "蔡建华",
+            "role": "学生",
             "school": "福州大学",
-            "address": "ddd",
-            "state": "成功",
+            "state": "可用",
             "date": "2019-10-20",
             "thumb": ""
         },
         {
             "id": 5,
             "name": "林曙峰",
+            "role": "教师",
             "school": "福州大学",
-            "address": "eee",
-            "state": "成功",
+            "state": "可用",
             "date": "2019-10-20",
             "thumb": ""
         }
