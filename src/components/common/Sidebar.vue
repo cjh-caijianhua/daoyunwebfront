@@ -92,7 +92,7 @@ export default {
                     title: '表单相关',
                     subs: [
                         {
-                            index: 'form',
+                            index: '500',
                             title: '基本表单'
                         },
                         {
@@ -100,11 +100,11 @@ export default {
                             title: '三级菜单',
                             subs: [
                                 {
-                                    index: 'test1',
+                                    index: '403',
                                     title: '三级菜单1'
                                 },
                                 {
-                                    index: 'test2',
+                                    index: '404',
                                     title: '三级菜单2'
                                 }
                             ]
