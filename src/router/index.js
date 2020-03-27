@@ -76,7 +76,7 @@ const routes = [{
       },
       {
         path: '/test1',
-        component: () => import( /*webpackChunkName: "test1" */ '../components/page/test1.vue'),
+        component: () => import( /*webpackChunkName: "test1" */ '../components/page/DicManage'),
         meta:{
           title:'测试1'
         }
