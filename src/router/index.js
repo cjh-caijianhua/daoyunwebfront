@@ -30,6 +30,20 @@ const routes = [{
     }
   },
   {
+    path: '/checkphone',
+    component: () => import( /* webpackChunkName: "checkphone" */ '../components/page/CheckPhone.vue'),
+    meta: {
+      title: '注册'
+    }
+  },
+  {
+    path: '/forgetpassword',
+    component: () => import( /* webpackChunkName: "forgetpassword" */ '../components/page/ForgetPassword.vue'),
+    meta: {
+      title: '注册'
+    }
+  },
+  {
     path: '/home',
     component: () => import( /* webpackChunkName: "home" */ '../components/common/Home.vue'),
     children: [{
