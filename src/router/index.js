@@ -12,6 +12,7 @@ const routes = [{
       */
     path: '/',
     redirect: '/manageboard'
+    //component: () => import( /* webpackChunkName: "manageboard" */ '../components/page/ManageBoard.vue')
   },
   {
     path: '/about',
@@ -46,7 +47,7 @@ const routes = [{
         }
       },
       {
-        path: '/RoleManage',
+        path: '/role',
         component: () => import( /*webpackChunkName: "role" */ '../components/page/RoleManage.vue'),
         meta: {
           title: '角色管理'
