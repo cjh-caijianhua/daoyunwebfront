@@ -93,7 +93,7 @@ export default {
                     subs: [
                         {
                             index: '500',
-                            title: '基本表单'
+                            title: '500异常页面'
                         },
                         {
                             index: '3-2',
