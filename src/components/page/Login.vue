@@ -4,14 +4,14 @@
             <div class="ms-title">到云后台管理系统</div>
             <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
                 <el-form-item prop="username">
-                    <el-input v-model="param.username" placeholder="username">
+                    <el-input v-model="param.username" placeholder="输入用户名或手机号">
                         <el-button slot="prepend" icon="el-icon-user"></el-button>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
                     <el-input
                         type="password"
-                        placeholder="password"
+                        placeholder="输入密码"
                         v-model="param.password"
                         @keyup.enter.native="submitForm()"
                     >
@@ -21,7 +21,7 @@
                 <div class="login-btn">
                     <el-button type="primary" @click="submitForm()">登录</el-button>
                 </div>
-                <p class="login-tips">Tips : 用户名和密码随便填。</p>
+                <el-link :underline="false" type="primary" class="forget-link" @click="forgetpassword">忘记密码</el-link>
             </el-form>
         </div>
     </div>
@@ -55,6 +55,9 @@ export default {
                 }
             });
         },
+        forgetpassword() {
+            this.$router.push({path:'/checkphone',query:{}});
+        }
     },
 };
 </script>
@@ -100,5 +103,9 @@ export default {
     font-size: 12px;
     line-height: 30px;
     color: #fff;
+}
+.forget-link {
+    position: absolute;
+    right:30px
 }
 </style>

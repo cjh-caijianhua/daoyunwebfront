@@ -2,29 +2,28 @@
 <div class="forget-wrap">
         <div class="ms-forget">
             <div class="ms-title">设置您的密码</div>
-    <el-form :model="Check" ref="checkform" label-width="0" class="checkform">
+    <el-form :model="Check" ref="forgetform" class="forgetform">
     
         
         <el-form-item label="旧密码" prop="oldPsd">
             <el-input type="password" v-model="ruleForm.oldPsd" placeholder="请输入旧密码"></el-input>
         </el-form-item>
         
-        <el-col :span="24">
+
         <el-form-item label="新密码" prop="newPsd">
             <el-input type="password" v-model="ruleForm.newPsd" placeholder="请输入新密码"></el-input>
         </el-form-item>
-        </el-col>
-        <el-col :span="24">
+
+
         <el-form-item label="确认新密码" prop="checkNewPsd">
             <el-input type="password" v-model="ruleForm.checkNewPsd" placeholder="请再次输入新密码"></el-input>
         </el-form-item>
-        </el-col>
-    
-        <el-col :span="24">
-        <el-form-item size="small" class="text-center subBtn">
-            <el-button type="primary" @click="onSave">确定修改</el-button>
+
+        <el-form-item>
+            <div class="passwordreset-btn">
+            <el-button type="primary" @click="changeConfirm">确定修改</el-button>
+            </div>
         </el-form-item>
-        </el-col>
     </el-form>
         </div>
 </div>
@@ -65,7 +64,13 @@ export default {
         checkNewPsd: [{ validator: validatePass2, trigger: "blur" }]
         }
     };
-    }
+    },
+    methods: {
+            changeConfirm(){
+                this.$router.push({path:'/login',query:{}});
+            }
+        }
+
 };
 </script>
 <style scoped>
@@ -94,20 +99,15 @@ export default {
     background: rgba(255, 255, 255, 0.3);
     overflow: hidden;
 }
-.ms-content {
+.forgetform {
     padding: 30px 30px;
 }
-.login-btn {
+.passwordreset-btn {
     text-align: center;
 }
-.login-btn button {
+.passwordreset-btn button {
     width: 100%;
     height: 36px;
     margin-bottom: 10px;
-}
-.login-tips {
-    font-size: 12px;
-    line-height: 30px;
-    color: #fff;
 }
 </style>

@@ -84,7 +84,7 @@
                 }
             },
             submitForm(){
-
+                this.$router.push({path:'/forgetpassword',query:{}});
             }
         }
     }
@@ -118,6 +118,9 @@
 }
 .checkform {
     padding: 30px 30px;
+}
+.checksubmit-btn {
+    text-align: center;
 }
 .checksubmit-btn button {
     width: 100%;
