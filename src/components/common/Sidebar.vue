@@ -96,6 +96,10 @@ export default {
                             title: '500异常页面'
                         },
                         {
+                            index: 'customerror',
+                            title: '自定义异常页面'
+                        },
+                        {
                             index: '3-2',
                             title: '三级菜单',
                             subs: [

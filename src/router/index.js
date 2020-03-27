@@ -33,14 +33,14 @@ const routes = [{
     path: '/checkphone',
     component: () => import( /* webpackChunkName: "checkphone" */ '../components/page/CheckPhone.vue'),
     meta: {
-      title: '注册'
+      title: '身份验证'
     }
   },
   {
     path: '/forgetpassword',
     component: () => import( /* webpackChunkName: "forgetpassword" */ '../components/page/ForgetPassword.vue'),
     meta: {
-      title: '注册'
+      title: '忘记密码'
     }
   },
   {
@@ -107,6 +107,13 @@ const routes = [{
         component: () => import( /*webpackChunkName: "404" */ '../components/page/500.vue'),
         meta:{
           title:'500'
+        }
+      },
+      {
+        path: '/customerror',
+        component: () => import( /*webpackChunkName: "404" */ '../components/page/CustomError.vue'),
+        meta:{
+          title:'自定义异常页面'
         }
       }
     ]
