@@ -73,6 +73,27 @@ const routes = [{
         meta:{
           title:'测试2'
         }
+      },
+      {
+        path: '/403',
+        component: () => import( /*webpackChunkName: "403" */ '../components/page/403.vue'),
+        meta:{
+          title:'403'
+        }
+      },
+      {
+        path: '/404',
+        component: () => import( /*webpackChunkName: "404" */ '../components/page/404.vue'),
+        meta:{
+          title:'404'
+        }
+      },
+      {
+        path: '/500',
+        component: () => import( /*webpackChunkName: "404" */ '../components/page/500.vue'),
+        meta:{
+          title:'500'
+        }
       }
     ]
   }
