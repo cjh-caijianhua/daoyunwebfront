@@ -44,6 +44,13 @@ const routes = [{
     }
   },
   {
+    path: '/helloworld',
+    component: () => import( /* webpackChunkName: "helloworld" */ '../components/HelloWorld.vue'),
+    meta: {
+      title: 'helloworld'
+    }
+  },
+  {
     path: '/home',
     component: () => import( /* webpackChunkName: "home" */ '../components/common/Home.vue'),
     children: [{
