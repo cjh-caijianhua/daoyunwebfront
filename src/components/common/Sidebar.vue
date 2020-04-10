@@ -78,7 +78,7 @@ export default {
                 },
                 {
                     icon: 'el-icon-tickets',
-                    index: 'test1',
+                    index: 'test2',
                     title: '课程管理'
                 },
                 {

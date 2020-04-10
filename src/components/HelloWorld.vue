@@ -32,32 +32,10 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
-  },
-  created(){
-    this.getData();
-    },
-  methods:{
-    getData(){
-      /*
-      axios.get('').then(res=>{
-        console.log(res)
-      },error=>{
-        console.log(error)
-      })
-      */
-    /*
-      axios.post('',
-              {headers:{'Content-Type': 'application/json'}}
-      ).then(res=>{
-        console.log('res',res);
-      })
-      */
-    }
   }
 }
 </script>
