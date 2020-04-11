@@ -99,7 +99,7 @@
 }
 
 .user-info-cont {
-    padding-left: 50px;
+    padding-left: 0px;
     flex: 1;
     font-size: 14px;
     color: #999;
