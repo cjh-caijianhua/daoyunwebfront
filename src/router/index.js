@@ -12,7 +12,7 @@ const routes = [{
           */
         path: '/',
         redirect: '/manageboard'
-            //component: () => import( /* webpackChunkName: "manageboard" */ '../components/page/ManageBoard.vue')
+        //component: () => import( /* webpackChunkName: "manageboard" */ '../components/page/ManageBoard.vue')
     },
     {
         path: '/about',
@@ -21,12 +21,12 @@ const routes = [{
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-            import ( /* webpackChunkName: "about" */ '../views/About.vue')
+            import( /* webpackChunkName: "about" */ '../views/About.vue')
     },
     {
         path: '/login',
         component: () =>
-            import ( /* webpackChunkName: "login" */ '../components/page/Login.vue'),
+            import( /* webpackChunkName: "login" */ '../components/page/Login.vue'),
         meta: {
             title: '登录'
         }
@@ -34,7 +34,7 @@ const routes = [{
     {
         path: '/checkphone',
         component: () =>
-            import ( /* webpackChunkName: "checkphone" */ '../components/page/CheckPhone.vue'),
+            import( /* webpackChunkName: "checkphone" */ '../components/page/CheckPhone.vue'),
         meta: {
             title: '身份验证'
         }
@@ -42,19 +42,26 @@ const routes = [{
     {
         path: '/forgetpassword',
         component: () =>
-            import ( /* webpackChunkName: "forgetpassword" */ '../components/page/ForgetPassword.vue'),
+            import( /* webpackChunkName: "forgetpassword" */ '../components/page/ForgetPassword.vue'),
         meta: {
             title: '忘记密码'
         }
     },
     {
+        path: '/helloworld',
+        component: () => import( /* webpackChunkName: "helloworld" */ '../components/HelloWorld.vue'),
+        meta: {
+            title: 'helloworld'
+        }
+    },
+    {
         path: '/home',
         component: () =>
-            import ( /* webpackChunkName: "home" */ '../components/common/Home.vue'),
+            import( /* webpackChunkName: "home" */ '../components/common/Home.vue'),
         children: [{
                 path: '/manageboard',
                 component: () =>
-                    import ( /* webpackChunkName: "manageboard" */ '../components/page/ManageBoard.vue'),
+                    import( /* webpackChunkName: "manageboard" */ '../components/page/ManageBoard.vue'),
                 meta: {
                     title: '系统首页'
                 }
@@ -62,7 +69,7 @@ const routes = [{
             {
                 path: '/table',
                 component: () =>
-                    import ( /*webpackChunkName: "table" */ '../components/page/BaseTable.vue'),
+                    import( /*webpackChunkName: "table" */ '../components/page/BaseTable.vue'),
                 meta: {
                     title: '基础表格'
                 }
@@ -70,7 +77,7 @@ const routes = [{
             {
                 path: '/role',
                 component: () =>
-                    import ( /*webpackChunkName: "role" */ '../components/page/RoleManage.vue'),
+                    import( /*webpackChunkName: "role" */ '../components/page/RoleManage.vue'),
                 meta: {
                     title: '角色管理'
                 }
@@ -78,7 +85,7 @@ const routes = [{
             {
                 path: '/form',
                 component: () =>
-                    import ( /*webpackChunkName: "form" */ '../components/page/BaseForm.vue'),
+                    import( /*webpackChunkName: "form" */ '../components/page/BaseForm.vue'),
                 meta: {
                     title: '表单编辑'
                 }
@@ -86,7 +93,7 @@ const routes = [{
             {
                 path: '/test1',
                 component: () =>
-                    import ( /*webpackChunkName: "test1" */ '../components/page/DicManage'),
+                    import( /*webpackChunkName: "test1" */ '../components/page/DicManage'),
                 meta: {
                     title: '测试1'
                 }
@@ -94,7 +101,7 @@ const routes = [{
             {
                 path: '/test2',
                 component: () =>
-                    import ( /*webpackChunkName: "test2" */ '../components/page/Cousemanage.vue'),
+                    import( /*webpackChunkName: "test2" */ '../components/page/Cousemanage.vue'),
                 meta: {
                     title: '课程管理'
                 }
@@ -102,7 +109,7 @@ const routes = [{
             {
                 path: '/403',
                 component: () =>
-                    import ( /*webpackChunkName: "403" */ '../components/page/403.vue'),
+                    import( /*webpackChunkName: "403" */ '../components/page/403.vue'),
                 meta: {
                     title: '403'
                 }
@@ -110,7 +117,7 @@ const routes = [{
             {
                 path: '/404',
                 component: () =>
-                    import ( /*webpackChunkName: "404" */ '../components/page/404.vue'),
+                    import( /*webpackChunkName: "404" */ '../components/page/404.vue'),
                 meta: {
                     title: '404'
                 }
@@ -118,7 +125,7 @@ const routes = [{
             {
                 path: '/500',
                 component: () =>
-                    import ( /*webpackChunkName: "404" */ '../components/page/500.vue'),
+                    import( /*webpackChunkName: "404" */ '../components/page/500.vue'),
                 meta: {
                     title: '500'
                 }
@@ -126,7 +133,7 @@ const routes = [{
             {
                 path: '/customerror',
                 component: () =>
-                    import ( /*webpackChunkName: "404" */ '../components/page/CustomError.vue'),
+                    import( /*webpackChunkName: "404" */ '../components/page/CustomError.vue'),
                 meta: {
                     title: '自定义异常页面'
                 }
