@@ -43,13 +43,13 @@ export default {
     },
   methods:{
     getData(){
-      /*
-      axios.get('').then(res=>{
+      
+      axios.get('http://localhost:8080/daoyunsystem/testExample/getAllPaper').then(res=>{
         console.log(res)
       },error=>{
         console.log(error)
       })
-      */
+      
     /*
       axios.post('',
               {headers:{'Content-Type': 'application/json'}}

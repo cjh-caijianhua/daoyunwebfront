@@ -107,6 +107,14 @@ const routes = [{
                 }
             },
             {
+                path: '/test',
+                component: () =>
+                    import( /*webpackChunkName: "test" */ '../components/page/test.vue'),
+                meta: {
+                    title: '测试页面'
+                }
+            },
+            {
                 path: '/403',
                 component: () =>
                     import( /*webpackChunkName: "403" */ '../components/page/403.vue'),

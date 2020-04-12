@@ -87,6 +87,11 @@ export default {
                     title: '数据字典管理'
                 },
                 {
+                    icon: 'el-icon-tickets',
+                    index: 'test',
+                    title: '测试页面'
+                },
+                {
                     icon: 'el-icon-files',
                     index: '3',
                     title: '表单相关',
