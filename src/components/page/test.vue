@@ -74,7 +74,7 @@
           layout="total, prev, pager, next"
           :current-page="query.page"
           :page-size="query.pageSize"
-          :total=1000
+          :total="selectTotal"
           @current-change="handlePageChange"
         ></el-pagination>
       </div>
@@ -110,10 +110,10 @@ export default {
         pageSize: 10
       },
       tableData: [],
+      selectTotal: 0,
       multipleSelection: [],
       delList: [],
       editVisible: false,
-      pageTotal: 0,
       form: {},
       idx: -1,
       id: -1
@@ -121,10 +121,11 @@ export default {
   },
   created() {
     this.getData();
+    this.getDataCount();
   },
   methods: {
     // 获取 easy-mock 的模拟数据
-    getData() {
+    getData() { //TODO 待加入搜索限定参数
       // axios
       //   .get("http://localhost:8080/daoyunWeb/testExample/getAllPaper")
       //   .then(
@@ -147,6 +148,22 @@ export default {
             console.log(res);
             if(res.status == 200){
               this.tableData=res.data.data
+            }
+          },
+          error => {
+            console.log(error);
+          }
+        );
+    },
+    getDataCount() { //TODO 待加入搜索限定参数
+      axios
+        .post(
+          "http://localhost:8080/daoyunWeb/testExample/getPaperCount",
+        ).then(
+          res => {
+            console.log(res);
+            if(res.status == 200){
+              this.selectTotal=res.data.data
             }
           },
           error => {
