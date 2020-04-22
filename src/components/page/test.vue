@@ -51,7 +51,6 @@
             >{{scope.row.state}}</el-tag>
           </template>
         </el-table-column>
-
         <el-table-column prop="date" label="注册时间"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
@@ -73,9 +72,9 @@
         <el-pagination
           background
           layout="total, prev, pager, next"
-          :current-page="query.pageIndex"
+          :current-page="query.page"
           :page-size="query.pageSize"
-          :total="pageTotal"
+          :total=1000
           @current-change="handlePageChange"
         ></el-pagination>
       </div>
@@ -107,9 +106,7 @@ export default {
   data() {
     return {
       query: {
-        address: "",
-        name: "",
-        pageIndex: 1,
+        page: 1,
         pageSize: 10
       },
       tableData: [],
@@ -128,22 +125,34 @@ export default {
   methods: {
     // 获取 easy-mock 的模拟数据
     getData() {
+      // axios
+      //   .get("http://localhost:8080/daoyunWeb/testExample/getAllPaper")
+      //   .then(
+      //     res => {
+      //       console.log(res);
+      //       this.tableData=res.data.data;
+      //     },
+      //     error => {
+      //       console.log(error);
+      //     }
+      //   );
       axios
-        .get("http://localhost:8080/daoyunsystem/testExample/getAllPaper")
+        .post(
+          "http://localhost:8080/daoyunWeb/testExample/getPaperByPage",
+          { page: this.query.page, pageSize: this.query.pageSize },
+          { headers: { "Content-Type": "application/json" } }
+        )
         .then(
           res => {
             console.log(res);
-            this.tableData=res.data.data;
+            if(res.status == 200){
+              this.tableData=res.data.data
+            }
           },
           error => {
             console.log(error);
           }
         );
-      // fetchData(this.query).then(res => {
-      //     console.log(res);
-      //     this.tableData = res.list;
-      //     this.pageTotal = res.pageTotal || 50;
-      // });
     },
     // 触发搜索按钮
     handleSearch() {
@@ -190,7 +199,7 @@ export default {
     },
     // 分页导航
     handlePageChange(val) {
-      this.$set(this.query, "pageIndex", val);
+      this.$set(this.query, "page", val);
       this.getData();
     }
   }
