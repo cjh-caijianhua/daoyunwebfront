@@ -13,7 +13,7 @@
           type="primary"
           icon="el-icon-delete"
           class="handle-del mr10"
-          @click="addPaper"
+          @click="handleAdd"
         >新增论文</el-button>
         <el-button
           type="primary"
@@ -90,6 +90,26 @@
         <el-button type="primary" @click="saveEdit">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 新增弹出框 -->
+    <el-dialog title="新增" :visible.sync="addVisible" width="30%">
+      <el-form ref="addform" :model="addform" label-width="70px">
+        <el-form-item label="论文名称">
+          <el-input v-model="addform.paperName"></el-input>
+        </el-form-item>
+        <el-form-item label="论文数量">
+          <el-input v-model.number="addform.paperNum"></el-input>
+        </el-form-item>
+        <el-form-item label="论文详情">
+          <el-input v-model="addform.paperDetail"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveAdd">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -109,8 +129,14 @@ export default {
       multipleSelection: [],
       delList: [],
       editVisible: false,
+      addVisible: false,
       form: {
         paperId:0,
+        paperName:"",
+        paperNum:0,
+        paperDetail:""
+      },
+      addform: {
         paperName:"",
         paperNum:0,
         paperDetail:""
@@ -189,6 +215,24 @@ export default {
           }
         );
     },
+    addPaper() { 
+      axios
+        .post(
+          "http://localhost:8080/daoyunWeb/testExample/addPaperJson",
+          { paperName: this.addform.paperName,paperNum: this.addform.paperNum,paperDetail: this.addform.paperDetail },
+          { headers: { "Content-Type": "application/json" } }
+        ).then(
+          res => {
+            console.log(res);
+            if(res.status == 200){
+              
+            }
+          },
+          error => {
+            console.log(error);
+          }
+        );
+    },
     // 触发搜索按钮
     handleSearch() {
       this.$set(this.query, "pageIndex", 1);
@@ -232,6 +276,15 @@ export default {
       this.$message.success(`修改第 ${this.idx + 1} 行成功`);
       this.updatePaper();
       this.$set(this.tableData, this.idx, this.form);
+    },
+    // 新增操作
+    handleAdd() {
+      this.addVisible = true;
+    },
+    // 保存新增
+    saveAdd() {
+      this.addPaper();
+      this.addVisible = false;
     },
     // 分页导航
     handlePageChange(val) {
