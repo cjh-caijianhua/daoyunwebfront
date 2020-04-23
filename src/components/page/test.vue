@@ -13,6 +13,12 @@
           type="primary"
           icon="el-icon-delete"
           class="handle-del mr10"
+          @click="addPaper"
+        >新增论文</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-delete"
+          class="handle-del mr10"
           @click="delAllSelection"
         >批量删除</el-button>
         <el-select v-model="query.address" placeholder="学校" class="handle-select mr10">
@@ -32,26 +38,9 @@
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="paperId" label="ID" width="55" align="center"></el-table-column>
-        <el-table-column prop="paperName" label="用户名"></el-table-column>
-        <el-table-column prop="paperNum" label="学校"></el-table-column>
-        <el-table-column label="头像(查看大图)" align="center">
-          <template slot-scope="scope">
-            <el-image
-              class="table-td-thumb"
-              :src="scope.row.thumb"
-              :preview-src-list="[scope.row.thumb]"
-            ></el-image>
-          </template>
-        </el-table-column>
-        <el-table-column prop="paperDetail" label="地址"></el-table-column>
-        <el-table-column label="状态" align="center">
-          <template slot-scope="scope">
-            <el-tag
-              :type="scope.row.state==='成功'?'success':(scope.row.state==='失败'?'danger':'')"
-            >{{scope.row.state}}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="date" label="注册时间"></el-table-column>
+        <el-table-column prop="paperName" label="论文名称"></el-table-column>
+        <el-table-column prop="paperNum" label="论文数量"></el-table-column>
+        <el-table-column prop="paperDetail" label="论文详情"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
             <el-button
@@ -83,11 +72,17 @@
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
       <el-form ref="form" :model="form" label-width="70px">
-        <el-form-item label="用户名">
-          <el-input v-model="form.name"></el-input>
+        <el-form-item label="论文Id">
+          <el-input v-model="form.paperId" disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="地址">
-          <el-input v-model="form.address"></el-input>
+        <el-form-item label="论文名称">
+          <el-input v-model="form.paperName"></el-input>
+        </el-form-item>
+        <el-form-item label="论文数量">
+          <el-input v-model.number="form.paperNum"></el-input>
+        </el-form-item>
+        <el-form-item label="论文详情">
+          <el-input v-model="form.paperDetail"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -114,7 +109,12 @@ export default {
       multipleSelection: [],
       delList: [],
       editVisible: false,
-      form: {},
+      form: {
+        paperId:0,
+        paperName:"",
+        paperNum:0,
+        paperDetail:""
+      },
       idx: -1,
       id: -1
     };
@@ -171,6 +171,24 @@ export default {
           }
         );
     },
+    updatePaper() { 
+      axios
+        .post(
+          "http://localhost:8080/daoyunWeb/testExample/updatePaperJson",
+          { paperId: this.form.paperId, paperName: this.form.paperName,paperNum: this.form.paperNum,paperDetail: this.form.paperDetail },
+          { headers: { "Content-Type": "application/json" } }
+        ).then(
+          res => {
+            console.log(res);
+            if(res.status == 200){
+              
+            }
+          },
+          error => {
+            console.log(error);
+          }
+        );
+    },
     // 触发搜索按钮
     handleSearch() {
       this.$set(this.query, "pageIndex", 1);
@@ -212,6 +230,7 @@ export default {
     saveEdit() {
       this.editVisible = false;
       this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+      this.updatePaper();
       this.$set(this.tableData, this.idx, this.form);
     },
     // 分页导航
