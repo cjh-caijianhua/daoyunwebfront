@@ -233,6 +233,22 @@ export default {
           }
         );
     },
+    deletePaper() { 
+      axios
+        .post(
+          "http://localhost:8080/daoyunWeb/testExample/deletePaperJson/"+this.form.paperId
+        ).then(
+          res => {
+            console.log(res);
+            if(res.status == 200){
+              
+            }
+          },
+          error => {
+            console.log(error);
+          }
+        );
+    },
     // 触发搜索按钮
     handleSearch() {
       this.$set(this.query, "pageIndex", 1);
@@ -245,6 +261,7 @@ export default {
         type: "warning"
       })
         .then(() => {
+          this.deletePaper();
           this.$message.success("删除成功");
           this.tableData.splice(index, 1);
         })
