@@ -66,21 +66,21 @@
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
       <el-form ref="form" :model="form" label-width="100px">
         <el-form-item label="Id">
-          <el-input v-model="form.id" disabled="true"></el-input>
+          <el-input v-model.number="form.id" disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="字典编号">
-          <el-input v-model="form.paperId" disabled="true"></el-input>
+          <el-input v-model.number="form.paperId" disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="ItemKey">
-          <el-input v-model.number="form.itemKey"></el-input>
+          <el-input v-model.number.number="form.itemKey"></el-input>
         </el-form-item>
         <el-form-item label="ItemValue">
           <el-input v-model="form.itemValue"></el-input>
         </el-form-item>
         <el-form-item label="是否默认(之后要改成selector)">
-          <el-input v-model="form.isDefault"></el-input>
+          <el-input v-model.number="form.isDefault"></el-input>
         </el-form-item>
-        <el-form-item label="ItemValue">
+        <el-form-item label="Code">
           <el-input v-model="form.code"></el-input>
         </el-form-item>
       </el-form>
@@ -94,16 +94,16 @@
     <el-dialog title="新增" :visible.sync="addVisible" width="30%">
       <el-form ref="addform" :model="addform" label-width="100px">
         <el-form-item label="ItemKey">
-          <el-input v-model.number="form.itemKey"></el-input>
+          <el-input v-model.number="addform.itemKey"></el-input>
         </el-form-item>
         <el-form-item label="ItemValue">
-          <el-input v-model="form.itemValue"></el-input>
+          <el-input v-model="addform.itemValue"></el-input>
         </el-form-item>
         <el-form-item label="是否默认(之后要改成selector)">
-          <el-input v-model="form.isDefault"></el-input>
+          <el-input v-model.number="addform.isDefault"></el-input>
         </el-form-item>
-        <el-form-item label="ItemValue">
-          <el-input v-model="form.code"></el-input>
+        <el-form-item label="Code">
+          <el-input v-model="addform.code"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -236,14 +236,16 @@ export default {
           }
         );
     },
-    addPaper() {
+    addPaperDetail() {
       axios
         .post(
-          "http://localhost:8080/daoyunWeb/testExample/addPaperJson",
+          "http://localhost:8080/daoyunWeb/testDetailExample/addPaperDetailJson",
           {
-            paperName: this.addform.paperName,
-            paperNum: this.addform.paperNum,
-            paperDetail: this.addform.paperDetail
+            paperId: this.paperId,
+            itemKey: this.addform.itemKey,
+            itemValue: this.addform.itemValue,
+            isDefault: this.addform.isDefault,
+            code: this.addform.code
           },
           { headers: { "Content-Type": "application/json" } }
         )
@@ -326,7 +328,7 @@ export default {
     },
     // 保存新增
     saveAdd() {
-      this.addPaper();
+      this.addPaperDetail();
       this.addVisible = false;
     },
     // 分页导航

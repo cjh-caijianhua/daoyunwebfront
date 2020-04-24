@@ -78,7 +78,7 @@
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
       <el-form ref="form" :model="form" label-width="70px">
         <el-form-item label="论文Id">
-          <el-input v-model="form.paperId" disabled="true"></el-input>
+          <el-input v-model.number="form.paperId" disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="论文名称">
           <el-input v-model="form.paperName"></el-input>
