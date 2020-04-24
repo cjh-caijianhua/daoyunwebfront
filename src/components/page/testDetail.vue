@@ -64,18 +64,24 @@
 
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-      <el-form ref="form" :model="form" label-width="70px">
-        <el-form-item label="论文Id">
+      <el-form ref="form" :model="form" label-width="100px">
+        <el-form-item label="Id">
+          <el-input v-model="form.id" disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="字典编号">
           <el-input v-model="form.paperId" disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="论文名称">
-          <el-input v-model="form.paperName"></el-input>
+        <el-form-item label="ItemKey">
+          <el-input v-model.number="form.itemKey"></el-input>
         </el-form-item>
-        <el-form-item label="论文数量">
-          <el-input v-model.number="form.paperNum"></el-input>
+        <el-form-item label="ItemValue">
+          <el-input v-model="form.itemValue"></el-input>
         </el-form-item>
-        <el-form-item label="论文详情">
-          <el-input v-model="form.paperDetail"></el-input>
+        <el-form-item label="是否默认(之后要改成selector)">
+          <el-input v-model="form.isDefault"></el-input>
+        </el-form-item>
+        <el-form-item label="ItemValue">
+          <el-input v-model="form.code"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -86,15 +92,18 @@
 
     <!-- 新增弹出框 -->
     <el-dialog title="新增" :visible.sync="addVisible" width="30%">
-      <el-form ref="addform" :model="addform" label-width="70px">
-        <el-form-item label="论文名称">
-          <el-input v-model="addform.paperName"></el-input>
+      <el-form ref="addform" :model="addform" label-width="100px">
+        <el-form-item label="ItemKey">
+          <el-input v-model.number="form.itemKey"></el-input>
         </el-form-item>
-        <el-form-item label="论文数量">
-          <el-input v-model.number="addform.paperNum"></el-input>
+        <el-form-item label="ItemValue">
+          <el-input v-model="form.itemValue"></el-input>
         </el-form-item>
-        <el-form-item label="论文详情">
-          <el-input v-model="addform.paperDetail"></el-input>
+        <el-form-item label="是否默认(之后要改成selector)">
+          <el-input v-model="form.isDefault"></el-input>
+        </el-form-item>
+        <el-form-item label="ItemValue">
+          <el-input v-model="form.code"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -152,6 +161,7 @@ export default {
         // 每次进入路由执行
         vm.initRouter()
         vm.getData();
+        vm.getDataCount();
     })
     
 },
@@ -190,7 +200,7 @@ export default {
     getDataCount() {
       //TODO 待加入搜索限定参数
       axios
-        .post("http://localhost:8080/daoyunWeb/testExample/getPaperCount")
+        .post("http://localhost:8080/daoyunWeb/testDetailExample/getPaperDetailCount/"+this.paperId)
         .then(
           res => {
             console.log(res);
