@@ -3,31 +3,23 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-tickets"></i> 测试页面
+          <i class="el-icon-tickets"></i> 测试详情页面
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
-      <div class="handle-box">
+    <div class="handle-box">
         <el-button
           type="primary"
           icon="el-icon-delete"
           class="handle-del mr10"
           @click="handleAdd"
         >新增论文</el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-delete"
-          class="handle-del mr10"
-          @click="delAllSelection"
-        >批量删除</el-button>
-        <el-select v-model="query.address" placeholder="学校" class="handle-select mr10">
-          <el-option key="1" label="福州大学" value="福州大学"></el-option>
-          <el-option key="2" label="福建师范大学" value="福建师范大学"></el-option>
-        </el-select>
-        <el-input v-model="query.name" placeholder="用户名" class="handle-input mr10"></el-input>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-      </div>
+    <el-tooltip class="item" effect="dark" placement="top-end">
+      <div slot="content">id：{{this.paperId}}<br/>详情：{{this.paperDetail}}<br/>数量：{{this.paperNum}}</div>
+      <el-button>名称：{{this.paperName}}</el-button>
+    </el-tooltip>
+    </div>
       <el-table
         :data="tableData"
         border
@@ -43,11 +35,6 @@
         <el-table-column prop="paperDetail" label="论文详情"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
-            <el-button
-              type="text"
-              icon="el-icon-edit"
-              @click="handleDetail(scope.$index, scope.row)"
-            >详情</el-button>
             <el-button
               type="text"
               icon="el-icon-edit"
@@ -145,14 +132,26 @@ export default {
         paperNum: 0,
         paperDetail: ""
       },
+      paperId:localStorage.getItem('paperId'),
+      paperName:localStorage.getItem('paperName'),
+      paperNum:localStorage.getItem('paperNum'),
+      paperDetail:localStorage.getItem('paperDetail'),
+      
       idx: -1,
       id: -1
     };
   },
   created() {
-    this.getData();
-    this.getDataCount();
   },
+  mounted(){
+  },
+  beforeRouteEnter(to, from, next){
+    next(vm=>{
+        console.log(vm)
+        // 每次进入路由执行
+        vm.initRouter()
+    })
+},
   methods: {
     // 获取 easy-mock 的模拟数据
     getData() {
@@ -185,6 +184,17 @@ export default {
             console.log(error);
           }
         );
+    },
+    initRouter(){
+        // this.paperId=this.$route.params.paperId;
+        // this.paperName=this.$route.params.paperName;
+        // this.paperNum=this.$route.params.paperNum;
+        // this.paperDetail=this.$route.params.paperDetail;
+
+        this.paperId=localStorage.getItem('paperId');
+        this.paperName=localStorage.getItem('paperName');
+        this.paperNum=localStorage.getItem('paperNum');
+        this.paperDetail=localStorage.getItem('paperDetail');
     },
     getDataCount() {
       //TODO 待加入搜索限定参数
@@ -317,20 +327,6 @@ export default {
     saveAdd() {
       this.addPaper();
       this.addVisible = false;
-    },
-    // 详情操作
-    handleDetail(index, row) {
-      this.idx = index;
-      this.form = row;
-      localStorage.setItem('paperId',this.form.paperId);
-      localStorage.setItem('paperName',this.form.paperName);
-      localStorage.setItem('paperNum',this.form.paperNum);
-      localStorage.setItem('paperDetail',this.form.paperDetail);
-      this.$router.push({
-        path: "/testdetail",
-        name: "testdetailpage",
-        //params: { paperId: this.form.paperId,paperName: this.form.paperName,paperNum: this.form.paperNum,paperDetail: this.form.paperDetail }
-      });
     },
     // 分页导航
     handlePageChange(val) {
