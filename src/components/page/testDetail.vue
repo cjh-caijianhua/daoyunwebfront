@@ -132,15 +132,18 @@ export default {
       editVisible: false,
       addVisible: false,
       form: {
+        id:0,
         paperId: 0,
-        paperName: "",
-        paperNum: 0,
-        paperDetail: ""
+        itemKey: 0,
+        itemValue: "",
+        isDefault:0,
+        code:""
       },
       addform: {
-        paperName: "",
-        paperNum: 0,
-        paperDetail: ""
+        itemKey: 0,
+        itemValue: "",
+        isDefault:0,
+        code:""
       },
       paperId:0,
       paperName:"",
@@ -265,8 +268,8 @@ export default {
     deletePaper() {
       axios
         .post(
-          "http://localhost:8080/daoyunWeb/testExample/deletePaperJson/" +
-            this.form.paperId
+          "http://localhost:8080/daoyunWeb/testDetailExample/deletePaperDetailJson/" +
+            this.form.id
         )
         .then(
           res => {
@@ -287,6 +290,8 @@ export default {
     // 删除操作
     handleDelete(index, row) {
       // 二次确认删除
+      this.idx = index;
+      this.form = row;
       this.$confirm("确定要删除吗？", "提示", {
         type: "warning"
       })
