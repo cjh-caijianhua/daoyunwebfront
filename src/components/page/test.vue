@@ -122,7 +122,7 @@ export default {
     return {
       query: {
         page: 1,
-        pageSize: 10,
+        pageSize: 5,
         paperName: ""
       },
       tableData: [],
@@ -224,6 +224,8 @@ export default {
           res => {
             console.log(res);
             if (res.status == 200) {
+              this.getData();
+              this.getDataCount();
             }
           },
           error => {
@@ -256,6 +258,7 @@ export default {
         );
     },
     deletePaper() {
+      console.log(this.form)
       axios
         .post(
           "http://localhost:8080/daoyunWeb/testExample/deletePaperJson/" +
@@ -265,6 +268,8 @@ export default {
           res => {
             console.log(res);
             if (res.status == 200) {
+              this.getData();
+              this.getDataCount();
             }
           },
           error => {
@@ -309,7 +314,7 @@ export default {
         .then(() => {
           this.deletePaper();
           this.$message.success("删除成功");
-          this.tableData.splice(index, 1);
+          //this.tableData.splice(index, 1);
         })
         .catch(() => {});
     },
@@ -344,7 +349,7 @@ export default {
       this.editVisible = false;
       this.$message.success(`修改第 ${this.idx + 1} 行成功`);
       this.updatePaper();
-      this.$set(this.tableData, this.idx, this.form);
+      //this.$set(this.tableData, this.idx, this.form);
     },
     // 新增操作
     handleAdd() {

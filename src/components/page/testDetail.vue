@@ -34,7 +34,7 @@
         header-cell-class-name="table-header"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column prop="id" label="字典编号" width="55" align="center"></el-table-column>
+        <el-table-column prop="id" label="内容编号" width="55" align="center"></el-table-column>
         <el-table-column prop="itemKey" label="ItemKey"></el-table-column>
         <el-table-column prop="itemValue" label="ItemValue"></el-table-column>
         <el-table-column prop="isDefault" label="是否默认"></el-table-column>
@@ -73,7 +73,7 @@
         <el-form-item label="Id">
           <el-input v-model.number="form.id" disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="字典编号">
+        <el-form-item label="内容编号">
           <el-input v-model.number="form.paperId" disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="ItemKey">
@@ -243,6 +243,8 @@ export default {
           res => {
             console.log(res);
             if (res.status == 200) {
+              this.getData();
+              this.getDataCount();
             }
           },
           error => {
@@ -286,6 +288,8 @@ export default {
           res => {
             console.log(res);
             if (res.status == 200) {
+              this.getData();
+              this.getDataCount();
             }
           },
           error => {
@@ -309,7 +313,7 @@ export default {
         .then(() => {
           this.deletePaperDetail();
           this.$message.success("删除成功");
-          this.tableData.splice(index, 1);
+          //this.tableData.splice(index, 1);
         })
         .catch(() => {});
     },
@@ -338,7 +342,7 @@ export default {
       this.editVisible = false;
       this.$message.success(`修改第 ${this.idx + 1} 行成功`);
       this.updatePaperDetail();
-      this.$set(this.tableData, this.idx, this.form);
+      //this.$set(this.tableData, this.idx, this.form);
     },
     // 新增操作
     handleAdd() {
