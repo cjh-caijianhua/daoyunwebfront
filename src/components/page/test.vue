@@ -14,7 +14,7 @@
           icon="el-icon-delete"
           class="handle-del mr10"
           @click="handleAdd"
-        >新增论文</el-button>
+        >新增字典</el-button>
         <el-button
           type="primary"
           icon="el-icon-delete"
@@ -25,7 +25,7 @@
           <el-option key="1" label="福州大学" value="福州大学"></el-option>
           <el-option key="2" label="福建师范大学" value="福建师范大学"></el-option>
         </el-select>
-        <el-input v-model="query.name" placeholder="用户名" class="handle-input mr10"></el-input>
+        <el-input v-model="query.paperName" placeholder="字典名称" class="handle-input mr10"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
       </div>
       <el-table
@@ -37,10 +37,10 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="paperId" label="ID" width="55" align="center"></el-table-column>
-        <el-table-column prop="paperName" label="论文名称"></el-table-column>
-        <el-table-column prop="paperNum" label="论文数量"></el-table-column>
-        <el-table-column prop="paperDetail" label="论文详情"></el-table-column>
+        <el-table-column prop="paperId" label="字典编号" width="55" align="center"></el-table-column>
+        <el-table-column prop="paperName" label="字典名称"></el-table-column>
+        <el-table-column prop="paperNum" label="Code"></el-table-column>
+        <el-table-column prop="paperDetail" label="字典描述"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
             <el-button
@@ -77,16 +77,16 @@
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
       <el-form ref="form" :model="form" label-width="70px">
-        <el-form-item label="论文Id">
+        <el-form-item label="字典编号">
           <el-input v-model.number="form.paperId" disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="论文名称">
+        <el-form-item label="字典名称">
           <el-input v-model="form.paperName"></el-input>
         </el-form-item>
-        <el-form-item label="论文数量">
+        <el-form-item label="Code">
           <el-input v-model.number="form.paperNum"></el-input>
         </el-form-item>
-        <el-form-item label="论文详情">
+        <el-form-item label="字典描述">
           <el-input v-model="form.paperDetail"></el-input>
         </el-form-item>
       </el-form>
@@ -99,13 +99,13 @@
     <!-- 新增弹出框 -->
     <el-dialog title="新增" :visible.sync="addVisible" width="30%">
       <el-form ref="addform" :model="addform" label-width="70px">
-        <el-form-item label="论文名称">
+        <el-form-item label="字典名称">
           <el-input v-model="addform.paperName"></el-input>
         </el-form-item>
-        <el-form-item label="论文数量">
+        <el-form-item label="Code">
           <el-input v-model.number="addform.paperNum"></el-input>
         </el-form-item>
-        <el-form-item label="论文详情">
+        <el-form-item label="字典描述">
           <el-input v-model="addform.paperDetail"></el-input>
         </el-form-item>
       </el-form>
@@ -126,7 +126,8 @@ export default {
     return {
       query: {
         page: 1,
-        pageSize: 10
+        pageSize: 10,
+        paperName: ""
       },
       tableData: [],
       selectTotal: 0,
@@ -171,7 +172,7 @@ export default {
       axios
         .post(
           "http://localhost:8080/daoyunWeb/testExample/getPaperByPage",
-          { page: this.query.page, pageSize: this.query.pageSize },
+          { page: this.query.page, pageSize: this.query.pageSize,paperName: this.query.paperName },
           { headers: { "Content-Type": "application/json" } }
         )
         .then(
@@ -189,7 +190,10 @@ export default {
     getDataCount() {
       //TODO 待加入搜索限定参数
       axios
-        .post("http://localhost:8080/daoyunWeb/testExample/getPaperCount")
+        .post("http://localhost:8080/daoyunWeb/testExample/getPaperCount",
+          { paperName: this.query.paperName },
+          { headers: { "Content-Type": "application/json" } }
+        )
         .then(
           res => {
             console.log(res);
@@ -268,6 +272,7 @@ export default {
     handleSearch() {
       this.$set(this.query, "pageIndex", 1);
       this.getData();
+      this.getDataCount();
     },
     // 删除操作
     handleDelete(index, row) {

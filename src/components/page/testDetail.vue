@@ -216,7 +216,7 @@ export default {
           }
         );
     },
-    updatePaper() {
+    updatePaperDetail() {
       axios
         .post(
           "http://localhost:8080/daoyunWeb/testDetailExample/updatePaperDetailJson",
@@ -265,7 +265,7 @@ export default {
           }
         );
     },
-    deletePaper() {
+    deletePaperDetail() {
       axios
         .post(
           "http://localhost:8080/daoyunWeb/testDetailExample/deletePaperDetailJson/" +
@@ -296,7 +296,7 @@ export default {
         type: "warning"
       })
         .then(() => {
-          this.deletePaper();
+          this.deletePaperDetail();
           this.$message.success("删除成功");
           this.tableData.splice(index, 1);
         })
@@ -326,7 +326,7 @@ export default {
     saveEdit() {
       this.editVisible = false;
       this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-      this.updatePaper();
+      this.updatePaperDetail();
       this.$set(this.tableData, this.idx, this.form);
     },
     // 新增操作
