@@ -246,6 +246,8 @@ export default {
           res => {
             console.log(res);
             if (res.status == 200) {
+              this.getData();
+              this.getDataCount();
             }
           },
           error => {
@@ -281,6 +283,8 @@ export default {
           res => {
             console.log(res);
             if (res.status == 200) {
+              this.getData();
+              this.getDataCount();
             }
           },
           error => {

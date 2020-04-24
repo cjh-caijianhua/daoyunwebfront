@@ -8,18 +8,24 @@
       </el-breadcrumb>
     </div>
     <div class="container">
-    <div class="handle-box">
+      <div class="handle-box">
         <el-button
           type="primary"
           icon="el-icon-delete"
           class="handle-del mr10"
           @click="handleAdd"
         >新增字典</el-button>
-    <el-tooltip class="item" effect="dark" placement="top-end">
-      <div slot="content">id：{{this.paperId}}<br/>详情：{{this.paperDetail}}<br/>数量：{{this.paperNum}}</div>
-      <el-button>名称：{{this.paperName}}</el-button>
-    </el-tooltip>
-    </div>
+        <el-tooltip class="item" effect="dark" placement="top-end">
+          <div slot="content">
+            id：{{this.paperId}}
+            <br />
+            详情：{{this.paperDetail}}
+            <br />
+            数量：{{this.paperNum}}
+          </div>
+          <el-button>名称：{{this.paperName}}</el-button>
+        </el-tooltip>
+      </div>
       <el-table
         :data="tableData"
         border
@@ -132,49 +138,50 @@ export default {
       editVisible: false,
       addVisible: false,
       form: {
-        id:0,
+        id: 0,
         paperId: 0,
         itemKey: 0,
         itemValue: "",
-        isDefault:0,
-        code:""
+        isDefault: 0,
+        code: ""
       },
       addform: {
         itemKey: 0,
         itemValue: "",
-        isDefault:0,
-        code:""
+        isDefault: 0,
+        code: ""
       },
-      paperId:0,
-      paperName:"",
-      paperNum:0,
-      paperDetail:"",
-      
+      paperId: 0,
+      paperName: "",
+      paperNum: 0,
+      paperDetail: "",
+
       idx: -1,
       id: -1
     };
   },
-  created() {
+  created() {},
+  mounted() {},
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      console.log(vm);
+      // 每次进入路由执行
+      vm.initRouter();
+      vm.getData();
+      vm.getDataCount();
+    });
   },
-  mounted(){
-  },
-  beforeRouteEnter(to, from, next){
-    next(vm=>{
-        console.log(vm)
-        // 每次进入路由执行
-        vm.initRouter()
-        vm.getData();
-        vm.getDataCount();
-    })
-    
-},
   methods: {
     // 获取 easy-mock 的模拟数据
     getData() {
       axios
         .post(
           "http://localhost:8080/daoyunWeb/testDetailExample/getPaperDetailByPage",
-          { page: this.query.page, pageSize: this.query.pageSize,paperId: this.paperId },
+          {
+            page: this.query.page,
+            pageSize: this.query.pageSize,
+            paperId: this.paperId
+          },
           { headers: { "Content-Type": "application/json" } }
         )
         .then(
@@ -189,21 +196,24 @@ export default {
           }
         );
     },
-    initRouter(){
-        // this.paperId=this.$route.params.paperId;
-        // this.paperName=this.$route.params.paperName;
-        // this.paperNum=this.$route.params.paperNum;
-        // this.paperDetail=this.$route.params.paperDetail;
+    initRouter() {
+      // this.paperId=this.$route.params.paperId;
+      // this.paperName=this.$route.params.paperName;
+      // this.paperNum=this.$route.params.paperNum;
+      // this.paperDetail=this.$route.params.paperDetail;
 
-        this.paperId=parseInt(localStorage.getItem('paperId'));
-        this.paperName=localStorage.getItem('paperName');
-        this.paperNum=parseInt(localStorage.getItem('paperNum'));
-        this.paperDetail=localStorage.getItem('paperDetail');
+      this.paperId = parseInt(localStorage.getItem("paperId"));
+      this.paperName = localStorage.getItem("paperName");
+      this.paperNum = parseInt(localStorage.getItem("paperNum"));
+      this.paperDetail = localStorage.getItem("paperDetail");
     },
     getDataCount() {
       //TODO 待加入搜索限定参数
       axios
-        .post("http://localhost:8080/daoyunWeb/testDetailExample/getPaperDetailCount/"+this.paperId)
+        .post(
+          "http://localhost:8080/daoyunWeb/testDetailExample/getPaperDetailCount/" +
+            this.paperId
+        )
         .then(
           res => {
             console.log(res);
@@ -258,6 +268,8 @@ export default {
           res => {
             console.log(res);
             if (res.status == 200) {
+              this.getData();
+              this.getDataCount();
             }
           },
           error => {
