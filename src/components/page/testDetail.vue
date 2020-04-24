@@ -34,7 +34,6 @@
         header-cell-class-name="table-header"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="id" label="字典编号" width="55" align="center"></el-table-column>
         <el-table-column prop="itemKey" label="ItemKey"></el-table-column>
         <el-table-column prop="itemValue" label="ItemValue"></el-table-column>

@@ -41,7 +41,7 @@
           <template slot-scope="scope">
             <el-button
               type="text"
-              icon="el-icon-edit"
+              icon="el-icon-plus"
               @click="handleDetail(scope.$index, scope.row)"
             >详情</el-button>
             <el-button
