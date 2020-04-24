@@ -21,10 +21,6 @@
           class="handle-del mr10"
           @click="delAllSelection"
         >批量删除</el-button>
-        <el-select v-model="query.address" placeholder="学校" class="handle-select mr10">
-          <el-option key="1" label="福州大学" value="福州大学"></el-option>
-          <el-option key="2" label="福建师范大学" value="福建师范大学"></el-option>
-        </el-select>
         <el-input v-model="query.paperName" placeholder="字典名称" class="handle-input mr10"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
       </div>
@@ -133,6 +129,7 @@ export default {
       selectTotal: 0,
       multipleSelection: [],
       delList: [],
+      delIdList: [],
       editVisible: false,
       addVisible: false,
       form: {
@@ -172,7 +169,11 @@ export default {
       axios
         .post(
           "http://localhost:8080/daoyunWeb/testExample/getPaperByPage",
-          { page: this.query.page, pageSize: this.query.pageSize,paperName: this.query.paperName },
+          {
+            page: this.query.page,
+            pageSize: this.query.pageSize,
+            paperName: this.query.paperName
+          },
           { headers: { "Content-Type": "application/json" } }
         )
         .then(
@@ -190,7 +191,8 @@ export default {
     getDataCount() {
       //TODO 待加入搜索限定参数
       axios
-        .post("http://localhost:8080/daoyunWeb/testExample/getPaperCount",
+        .post(
+          "http://localhost:8080/daoyunWeb/testExample/getPaperCount",
           { paperName: this.query.paperName },
           { headers: { "Content-Type": "application/json" } }
         )
@@ -268,6 +270,24 @@ export default {
           }
         );
     },
+    deletePaperBatch() {
+      axios
+        .post(
+          "http://localhost:8080/daoyunWeb/testExample/deletePaperBatchJson",
+          this.delIdList,
+          { headers: { "Content-Type": "application/json" } }
+        )
+        .then(
+          res => {
+            console.log(res);
+            if (res.status == 200) {
+            }
+          },
+          error => {
+            console.log(error);
+          }
+        );
+    },
     // 触发搜索按钮
     handleSearch() {
       this.$set(this.query, "pageIndex", 1);
@@ -295,13 +315,19 @@ export default {
     },
     delAllSelection() {
       const length = this.multipleSelection.length;
-      let str = "";
-      this.delList = this.delList.concat(this.multipleSelection);
-      for (let i = 0; i < length; i++) {
-        str += this.multipleSelection[i].name + " ";
+      if (length == 0) {
+        this.$message.error("请至少选中一项！");
+      } else {
+        let str = "";
+        this.delList = this.delList.concat(this.multipleSelection);
+        for (let i = 0; i < length; i++) {
+          str += this.multipleSelection[i].paperName + " ";
+          this.delIdList.push(this.multipleSelection[i].paperId);
+        }
+        this.deletePaperBatch();
+        this.$message.error(`删除了${str}`);
+        this.multipleSelection = [];
       }
-      this.$message.error(`删除了${str}`);
-      this.multipleSelection = [];
     },
     // 编辑操作
     handleEdit(index, row) {
@@ -329,13 +355,13 @@ export default {
     handleDetail(index, row) {
       this.idx = index;
       this.form = row;
-      localStorage.setItem('paperId',this.form.paperId);
-      localStorage.setItem('paperName',this.form.paperName);
-      localStorage.setItem('paperNum',this.form.paperNum);
-      localStorage.setItem('paperDetail',this.form.paperDetail);
+      localStorage.setItem("paperId", this.form.paperId);
+      localStorage.setItem("paperName", this.form.paperName);
+      localStorage.setItem("paperNum", this.form.paperNum);
+      localStorage.setItem("paperDetail", this.form.paperDetail);
       this.$router.push({
         path: "/testdetail",
-        name: "testdetailpage",
+        name: "testdetailpage"
         //params: { paperId: this.form.paperId,paperName: this.form.paperName,paperNum: this.form.paperNum,paperDetail: this.form.paperDetail }
       });
     },
