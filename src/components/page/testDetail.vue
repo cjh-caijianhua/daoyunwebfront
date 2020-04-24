@@ -14,7 +14,7 @@
           icon="el-icon-delete"
           class="handle-del mr10"
           @click="handleAdd"
-        >新增论文</el-button>
+        >新增字典</el-button>
     <el-tooltip class="item" effect="dark" placement="top-end">
       <div slot="content">id：{{this.paperId}}<br/>详情：{{this.paperDetail}}<br/>数量：{{this.paperNum}}</div>
       <el-button>名称：{{this.paperName}}</el-button>
@@ -29,10 +29,11 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="paperId" label="ID" width="55" align="center"></el-table-column>
-        <el-table-column prop="paperName" label="论文名称"></el-table-column>
-        <el-table-column prop="paperNum" label="论文数量"></el-table-column>
-        <el-table-column prop="paperDetail" label="论文详情"></el-table-column>
+        <el-table-column prop="id" label="字典编号" width="55" align="center"></el-table-column>
+        <el-table-column prop="itemKey" label="ItemKey"></el-table-column>
+        <el-table-column prop="itemValue" label="ItemValue"></el-table-column>
+        <el-table-column prop="isDefault" label="是否默认"></el-table-column>
+        <el-table-column prop="code" label="Code"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
             <el-button
@@ -132,10 +133,10 @@ export default {
         paperNum: 0,
         paperDetail: ""
       },
-      paperId:localStorage.getItem('paperId'),
-      paperName:localStorage.getItem('paperName'),
-      paperNum:localStorage.getItem('paperNum'),
-      paperDetail:localStorage.getItem('paperDetail'),
+      paperId:0,
+      paperName:"",
+      paperNum:0,
+      paperDetail:"",
       
       idx: -1,
       id: -1
@@ -150,27 +151,17 @@ export default {
         console.log(vm)
         // 每次进入路由执行
         vm.initRouter()
+        vm.getData();
     })
+    
 },
   methods: {
     // 获取 easy-mock 的模拟数据
     getData() {
-      //TODO 待加入搜索限定参数
-      // axios
-      //   .get("http://localhost:8080/daoyunWeb/testExample/getAllPaper")
-      //   .then(
-      //     res => {
-      //       console.log(res);
-      //       this.tableData=res.data.data;
-      //     },
-      //     error => {
-      //       console.log(error);
-      //     }
-      //   );
       axios
         .post(
-          "http://localhost:8080/daoyunWeb/testExample/getPaperByPage",
-          { page: this.query.page, pageSize: this.query.pageSize },
+          "http://localhost:8080/daoyunWeb/testDetailExample/getPaperDetailByPage",
+          { page: this.query.page, pageSize: this.query.pageSize,paperId: this.paperId },
           { headers: { "Content-Type": "application/json" } }
         )
         .then(
@@ -191,9 +182,9 @@ export default {
         // this.paperNum=this.$route.params.paperNum;
         // this.paperDetail=this.$route.params.paperDetail;
 
-        this.paperId=localStorage.getItem('paperId');
+        this.paperId=parseInt(localStorage.getItem('paperId'));
         this.paperName=localStorage.getItem('paperName');
-        this.paperNum=localStorage.getItem('paperNum');
+        this.paperNum=parseInt(localStorage.getItem('paperNum'));
         this.paperDetail=localStorage.getItem('paperDetail');
     },
     getDataCount() {
