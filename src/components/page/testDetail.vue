@@ -216,12 +216,14 @@ export default {
     updatePaper() {
       axios
         .post(
-          "http://localhost:8080/daoyunWeb/testExample/updatePaperJson",
+          "http://localhost:8080/daoyunWeb/testDetailExample/updatePaperDetailJson",
           {
+            id: this.form.id,
             paperId: this.form.paperId,
-            paperName: this.form.paperName,
-            paperNum: this.form.paperNum,
-            paperDetail: this.form.paperDetail
+            itemKey: this.form.itemKey,
+            itemValue: this.form.itemValue,
+            isDefault: this.form.isDefault,
+            code: this.form.code
           },
           { headers: { "Content-Type": "application/json" } }
         )
