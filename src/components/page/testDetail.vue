@@ -8,18 +8,24 @@
       </el-breadcrumb>
     </div>
     <div class="container">
-    <div class="handle-box">
+      <div class="handle-box">
         <el-button
           type="primary"
           icon="el-icon-delete"
           class="handle-del mr10"
           @click="handleAdd"
-        >新增论文</el-button>
-    <el-tooltip class="item" effect="dark" placement="top-end">
-      <div slot="content">id：{{this.paperId}}<br/>详情：{{this.paperDetail}}<br/>数量：{{this.paperNum}}</div>
-      <el-button>名称：{{this.paperName}}</el-button>
-    </el-tooltip>
-    </div>
+        >新增字典</el-button>
+        <el-tooltip class="item" effect="dark" placement="top-end">
+          <div slot="content">
+            id：{{this.paperId}}
+            <br />
+            详情：{{this.paperDetail}}
+            <br />
+            数量：{{this.paperNum}}
+          </div>
+          <el-button>名称：{{this.paperName}}</el-button>
+        </el-tooltip>
+      </div>
       <el-table
         :data="tableData"
         border
@@ -28,11 +34,11 @@
         header-cell-class-name="table-header"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="paperId" label="ID" width="55" align="center"></el-table-column>
-        <el-table-column prop="paperName" label="论文名称"></el-table-column>
-        <el-table-column prop="paperNum" label="论文数量"></el-table-column>
-        <el-table-column prop="paperDetail" label="论文详情"></el-table-column>
+        <el-table-column prop="id" label="内容编号" width="55" align="center"></el-table-column>
+        <el-table-column prop="itemKey" label="ItemKey"></el-table-column>
+        <el-table-column prop="itemValue" label="ItemValue"></el-table-column>
+        <el-table-column prop="isDefault" label="是否默认"></el-table-column>
+        <el-table-column prop="code" label="Code"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
             <el-button
@@ -63,18 +69,24 @@
 
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-      <el-form ref="form" :model="form" label-width="70px">
-        <el-form-item label="论文Id">
-          <el-input v-model="form.paperId" disabled="true"></el-input>
+      <el-form ref="form" :model="form" label-width="100px">
+        <el-form-item label="Id">
+          <el-input v-model.number="form.id" disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="论文名称">
-          <el-input v-model="form.paperName"></el-input>
+        <el-form-item label="内容编号">
+          <el-input v-model.number="form.paperId" disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="论文数量">
-          <el-input v-model.number="form.paperNum"></el-input>
+        <el-form-item label="ItemKey">
+          <el-input v-model.number.number="form.itemKey"></el-input>
         </el-form-item>
-        <el-form-item label="论文详情">
-          <el-input v-model="form.paperDetail"></el-input>
+        <el-form-item label="ItemValue">
+          <el-input v-model="form.itemValue"></el-input>
+        </el-form-item>
+        <el-form-item label="是否默认(之后要改成selector)">
+          <el-input v-model.number="form.isDefault"></el-input>
+        </el-form-item>
+        <el-form-item label="Code">
+          <el-input v-model="form.code"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -85,15 +97,18 @@
 
     <!-- 新增弹出框 -->
     <el-dialog title="新增" :visible.sync="addVisible" width="30%">
-      <el-form ref="addform" :model="addform" label-width="70px">
-        <el-form-item label="论文名称">
-          <el-input v-model="addform.paperName"></el-input>
+      <el-form ref="addform" :model="addform" label-width="100px">
+        <el-form-item label="ItemKey">
+          <el-input v-model.number="addform.itemKey"></el-input>
         </el-form-item>
-        <el-form-item label="论文数量">
-          <el-input v-model.number="addform.paperNum"></el-input>
+        <el-form-item label="ItemValue">
+          <el-input v-model="addform.itemValue"></el-input>
         </el-form-item>
-        <el-form-item label="论文详情">
-          <el-input v-model="addform.paperDetail"></el-input>
+        <el-form-item label="是否默认(之后要改成selector)">
+          <el-input v-model.number="addform.isDefault"></el-input>
+        </el-form-item>
+        <el-form-item label="Code">
+          <el-input v-model="addform.code"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -122,55 +137,50 @@ export default {
       editVisible: false,
       addVisible: false,
       form: {
+        id: 0,
         paperId: 0,
-        paperName: "",
-        paperNum: 0,
-        paperDetail: ""
+        itemKey: 0,
+        itemValue: "",
+        isDefault: 0,
+        code: ""
       },
       addform: {
-        paperName: "",
-        paperNum: 0,
-        paperDetail: ""
+        itemKey: 0,
+        itemValue: "",
+        isDefault: 0,
+        code: ""
       },
-      paperId:localStorage.getItem('paperId'),
-      paperName:localStorage.getItem('paperName'),
-      paperNum:localStorage.getItem('paperNum'),
-      paperDetail:localStorage.getItem('paperDetail'),
-      
+      paperId: 0,
+      paperName: "",
+      paperNum: 0,
+      paperDetail: "",
+
       idx: -1,
       id: -1
     };
   },
-  created() {
+  created() {},
+  mounted() {},
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      console.log(vm);
+      // 每次进入路由执行
+      vm.initRouter();
+      vm.getData();
+      vm.getDataCount();
+    });
   },
-  mounted(){
-  },
-  beforeRouteEnter(to, from, next){
-    next(vm=>{
-        console.log(vm)
-        // 每次进入路由执行
-        vm.initRouter()
-    })
-},
   methods: {
     // 获取 easy-mock 的模拟数据
     getData() {
-      //TODO 待加入搜索限定参数
-      // axios
-      //   .get("http://localhost:8080/daoyunWeb/testExample/getAllPaper")
-      //   .then(
-      //     res => {
-      //       console.log(res);
-      //       this.tableData=res.data.data;
-      //     },
-      //     error => {
-      //       console.log(error);
-      //     }
-      //   );
       axios
         .post(
-          "http://localhost:8080/daoyunWeb/testExample/getPaperByPage",
-          { page: this.query.page, pageSize: this.query.pageSize },
+          "http://localhost:8080/daoyunWeb/testDetailExample/getPaperDetailByPage",
+          {
+            page: this.query.page,
+            pageSize: this.query.pageSize,
+            paperId: this.paperId
+          },
           { headers: { "Content-Type": "application/json" } }
         )
         .then(
@@ -185,21 +195,24 @@ export default {
           }
         );
     },
-    initRouter(){
-        // this.paperId=this.$route.params.paperId;
-        // this.paperName=this.$route.params.paperName;
-        // this.paperNum=this.$route.params.paperNum;
-        // this.paperDetail=this.$route.params.paperDetail;
+    initRouter() {
+      // this.paperId=this.$route.params.paperId;
+      // this.paperName=this.$route.params.paperName;
+      // this.paperNum=this.$route.params.paperNum;
+      // this.paperDetail=this.$route.params.paperDetail;
 
-        this.paperId=localStorage.getItem('paperId');
-        this.paperName=localStorage.getItem('paperName');
-        this.paperNum=localStorage.getItem('paperNum');
-        this.paperDetail=localStorage.getItem('paperDetail');
+      this.paperId = parseInt(localStorage.getItem("paperId"));
+      this.paperName = localStorage.getItem("paperName");
+      this.paperNum = parseInt(localStorage.getItem("paperNum"));
+      this.paperDetail = localStorage.getItem("paperDetail");
     },
     getDataCount() {
       //TODO 待加入搜索限定参数
       axios
-        .post("http://localhost:8080/daoyunWeb/testExample/getPaperCount")
+        .post(
+          "http://localhost:8080/daoyunWeb/testDetailExample/getPaperDetailCount/" +
+            this.paperId
+        )
         .then(
           res => {
             console.log(res);
@@ -212,15 +225,17 @@ export default {
           }
         );
     },
-    updatePaper() {
+    updatePaperDetail() {
       axios
         .post(
-          "http://localhost:8080/daoyunWeb/testExample/updatePaperJson",
+          "http://localhost:8080/daoyunWeb/testDetailExample/updatePaperDetailJson",
           {
+            id: this.form.id,
             paperId: this.form.paperId,
-            paperName: this.form.paperName,
-            paperNum: this.form.paperNum,
-            paperDetail: this.form.paperDetail
+            itemKey: this.form.itemKey,
+            itemValue: this.form.itemValue,
+            isDefault: this.form.isDefault,
+            code: this.form.code
           },
           { headers: { "Content-Type": "application/json" } }
         )
@@ -228,6 +243,8 @@ export default {
           res => {
             console.log(res);
             if (res.status == 200) {
+              this.getData();
+              this.getDataCount();
             }
           },
           error => {
@@ -235,14 +252,16 @@ export default {
           }
         );
     },
-    addPaper() {
+    addPaperDetail() {
       axios
         .post(
-          "http://localhost:8080/daoyunWeb/testExample/addPaperJson",
+          "http://localhost:8080/daoyunWeb/testDetailExample/addPaperDetailJson",
           {
-            paperName: this.addform.paperName,
-            paperNum: this.addform.paperNum,
-            paperDetail: this.addform.paperDetail
+            paperId: this.paperId,
+            itemKey: this.addform.itemKey,
+            itemValue: this.addform.itemValue,
+            isDefault: this.addform.isDefault,
+            code: this.addform.code
           },
           { headers: { "Content-Type": "application/json" } }
         )
@@ -250,6 +269,8 @@ export default {
           res => {
             console.log(res);
             if (res.status == 200) {
+              this.getData();
+              this.getDataCount();
             }
           },
           error => {
@@ -257,16 +278,18 @@ export default {
           }
         );
     },
-    deletePaper() {
+    deletePaperDetail() {
       axios
         .post(
-          "http://localhost:8080/daoyunWeb/testExample/deletePaperJson/" +
-            this.form.paperId
+          "http://localhost:8080/daoyunWeb/testDetailExample/deletePaperDetailJson/" +
+            this.form.id
         )
         .then(
           res => {
             console.log(res);
             if (res.status == 200) {
+              this.getData();
+              this.getDataCount();
             }
           },
           error => {
@@ -282,13 +305,15 @@ export default {
     // 删除操作
     handleDelete(index, row) {
       // 二次确认删除
+      this.idx = index;
+      this.form = row;
       this.$confirm("确定要删除吗？", "提示", {
         type: "warning"
       })
         .then(() => {
-          this.deletePaper();
+          this.deletePaperDetail();
           this.$message.success("删除成功");
-          this.tableData.splice(index, 1);
+          //this.tableData.splice(index, 1);
         })
         .catch(() => {});
     },
@@ -316,8 +341,8 @@ export default {
     saveEdit() {
       this.editVisible = false;
       this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-      this.updatePaper();
-      this.$set(this.tableData, this.idx, this.form);
+      this.updatePaperDetail();
+      //this.$set(this.tableData, this.idx, this.form);
     },
     // 新增操作
     handleAdd() {
@@ -325,7 +350,7 @@ export default {
     },
     // 保存新增
     saveAdd() {
-      this.addPaper();
+      this.addPaperDetail();
       this.addVisible = false;
     },
     // 分页导航
