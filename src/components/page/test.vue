@@ -174,7 +174,7 @@ export default {
             pageSize: this.query.pageSize,
             paperName: this.query.paperName
           },
-          { headers: { "Content-Type": "application/json" } }
+          { headers: { "Content-Type": "application/json","token":localStorage.getItem('token') } }
         )
         .then(
           res => {
