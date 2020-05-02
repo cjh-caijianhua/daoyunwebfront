@@ -3,8 +3,8 @@
     <div class="ms-login">
       <div class="ms-title">到云后台管理系统</div>
       <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
-        <el-form-item prop="username">
-          <el-input v-model="param.username" placeholder="输入用户名或手机号">
+        <el-form-item prop="userName">
+          <el-input v-model="param.userName" placeholder="输入用户名或手机号">
             <el-button slot="prepend" icon="el-icon-user"></el-button>
           </el-input>
         </el-form-item>
@@ -37,7 +37,7 @@ export default {
         password: "123123"
       },
       rules: {
-        username: [
+        userName: [
           { required: true, message: "请输入用户名", trigger: "blur" }
         ],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }]
@@ -59,10 +59,15 @@ export default {
                 console.log(res);
                 if (res.status == 200) {
                   console.log(res);
-                  localStorage.setItem("token",res.data.dataplus)
-                  this.$message.success("登录成功");
-                  localStorage.setItem("ms_username", this.param.userName);
-                  this.$router.push("/");
+                  if (res.data.code == 0) {
+                    localStorage.setItem("token", res.data.dataPlus);
+                    this.$message.success(res.data.msg);
+                    localStorage.setItem("ms_userName", this.param.userName);
+                    this.$router.push("/");
+                  }
+                  else{
+                    this.$message.error(res.data.msg);
+                  }
                 }
               },
               error => {

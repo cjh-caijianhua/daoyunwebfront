@@ -21,18 +21,18 @@ Vue.use(ElementUI, {
 });
 
 // 添加请求拦截器，在请求头中加token
-// axios.interceptors.request.use(
-//   config => {
-//     if(config.url.indexOf('/Login/checkLogin') >= 0){
-//       return config;
-//     }
-//     else{
-//       if (localStorage.getItem('token')) {
-//         config.headers.token = localStorage.getItem('token');
-//       }
-//       return config;
-//     }
-//   },
-//   error => {
-//     return Promise.reject(error);
-//   });
+axios.interceptors.request.use(
+  config => {
+    if(config.url.indexOf('/Login/checkLogin') >= 0){
+      return config;
+    }
+    else{
+      if (localStorage.getItem('token') || localStorage.getItem('token') != "undefined") {
+        config.headers.token = localStorage.getItem('token');
+      }
+      return config;
+    }
+  },
+  error => {
+    return Promise.reject(error);
+  });
