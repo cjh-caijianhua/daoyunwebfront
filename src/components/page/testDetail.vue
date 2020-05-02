@@ -175,7 +175,7 @@ export default {
     getData() {
       axios
         .post(
-          "http://localhost:8080/daoyunWeb/testDetailExample/getPaperDetailByPage",
+          "http://localhost:8080/daoyunWeb_war_exploded/testDetailExample/getPaperDetailByPage",
           {
             page: this.query.page,
             pageSize: this.query.pageSize,
@@ -210,7 +210,7 @@ export default {
       //TODO 待加入搜索限定参数
       axios
         .post(
-          "http://localhost:8080/daoyunWeb/testDetailExample/getPaperDetailCount/" +
+          "http://localhost:8080/daoyunWeb_war_exploded/testDetailExample/getPaperDetailCount/" +
             this.paperId
         )
         .then(
@@ -228,7 +228,7 @@ export default {
     updatePaperDetail() {
       axios
         .post(
-          "http://localhost:8080/daoyunWeb/testDetailExample/updatePaperDetailJson",
+          "http://localhost:8080/daoyunWeb_war_exploded/testDetailExample/updatePaperDetailJson",
           {
             id: this.form.id,
             paperId: this.form.paperId,
@@ -255,7 +255,7 @@ export default {
     addPaperDetail() {
       axios
         .post(
-          "http://localhost:8080/daoyunWeb/testDetailExample/addPaperDetailJson",
+          "http://localhost:8080/daoyunWeb_war_exploded/testDetailExample/addPaperDetailJson",
           {
             paperId: this.paperId,
             itemKey: this.addform.itemKey,
@@ -281,7 +281,7 @@ export default {
     deletePaperDetail() {
       axios
         .post(
-          "http://localhost:8080/daoyunWeb/testDetailExample/deletePaperDetailJson/" +
+          "http://localhost:8080/daoyunWeb_war_exploded/testDetailExample/deletePaperDetailJson/" +
             this.form.id
         )
         .then(

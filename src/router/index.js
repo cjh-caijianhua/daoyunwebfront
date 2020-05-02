@@ -100,11 +100,11 @@ const routes = [{
                 }
             },
             {
-                path: '/test1',
+                path: '/dictionary',
                 component: () =>
                     import ( /*webpackChunkName: "test1" */ '../components/page/DicManage'),
                 meta: {
-                    title: '测试1'
+                    title: '字典'
                 }
             },
             {
@@ -130,6 +130,15 @@ const routes = [{
                     import ( /*webpackChunkName: "testdetail" */ '../components/page/testDetail.vue'),
                 meta: {
                     title: '测试详情页面'
+                }
+            },
+            {
+                path: '/dicdetail',
+                name: 'dicdetailpage',
+                component: () =>
+                    import ( /*webpackChunkName: "testdetail" */ '../components/page/dicDetail.vue'),
+                meta: {
+                    title: '字典详情页面'
                 }
             },
             {
