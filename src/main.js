@@ -27,7 +27,7 @@ axios.interceptors.request.use(
       return config;
     }
     else{
-      if (localStorage.getItem('token') || localStorage.getItem('token') != "undefined") {
+      if (localStorage.getItem('token') && localStorage.getItem('token') != "undefined") {
         config.headers.token = localStorage.getItem('token');
       }
       return config;
