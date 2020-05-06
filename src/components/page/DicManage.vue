@@ -3,262 +3,365 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 字典明细
+          <i class="el-icon-lx-cascades"></i> 字典
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
       <div class="handle-box">
-        <div class="head">  <el-button type="primary" round @click="addStudent">新增字典</el-button></div>
+        <el-button
+                type="primary"
+                icon="el-icon-delete"
+                class="handle-del mr10"
+                @click="handleAdd"
+        >新增字典</el-button>
+        <el-button
+                type="primary"
+                icon="el-icon-delete"
+                class="handle-del mr10"
+                @click="delAllSelection"
+        >批量删除</el-button>
+        <el-input v-model="query.dicName" placeholder="字典名称" class="handle-input mr10"></el-input>
+        <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
       </div>
       <el-table
-        :data="list"
-        style="width: 100%">
-        <el-table-column
-          prop="id"
-          label="明细id"
-          width="100"
-          align="center">
-        </el-table-column>
-        <el-table-column
-          prop="dic_id"
-          label="字典编号"
-          width="180"
-          align="center">
-        </el-table-column>
-        <el-table-column
-          prop="dic_name"
-          label="字典名称"
-          align="center">
-        </el-table-column>
-        <el-table-column label="是否固定" width="110"  align="center">
+              :data="tableData"
+              border
+              class="table"
+              ref="multipleTable"
+              header-cell-class-name="table-header"
+              @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="55" align="center"></el-table-column>
+        <el-table-column prop="dicId" label="字典编号" width="55" align="center"></el-table-column>
+        <el-table-column prop="dicName" label="字典名称"></el-table-column>
+        <el-table-column prop="code" label="Code"></el-table-column>
+        <el-table-column prop="dicDescription" label="字典描述"></el-table-column>
+        <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
-            <el-tag
-              :type="scope.row.state==='固定'?'success':(scope.row.state==='不固定'?'danger':'')"
-            >{{scope.row.state}}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="cre_date"
-          label="创建时间"
-          align="center">
-        </el-table-column>
-        <el-table-column
-          prop="cre_name"
-          label="创建者"
-          align="center">
-        </el-table-column>
-        <el-table-column
-          prop="last_date"
-          label="最后一次修改时间"
-          align="center">
-        </el-table-column>
-        <el-table-column
-          prop="last_name"
-          label="最后一次修改者"
-          align="center">
-        </el-table-column>
-        <el-table-column
-          label="操作"
-          align="center">
-            <template slot-scope="scope">
             <el-button
-              type="text"
-              icon="el-icon-edit"
-              @click="handleEdit(scope.$index, scope.row)"
+                    type="text"
+                    icon="el-icon-plus"
+                    @click="handleDetail(scope.$index, scope.row)"
+            >详情</el-button>
+            <el-button
+                    type="text"
+                    icon="el-icon-edit"
+                    @click="handleEdit(scope.$index, scope.row)"
             >编辑</el-button>
             <el-button
-              type="text"
-              icon="el-icon-delete"
-              class="red"
-              @click="handleDelete(scope.$index)"
+                    type="text"
+                    icon="el-icon-delete"
+                    class="red"
+                    @click="handleDelete(scope.$index, scope.row)"
             >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <div class="pagination">
+        <el-pagination
+                background
+                layout="total, prev, pager, next"
+                :current-page="query.page"
+                :page-size="query.pageSize"
+                :total="selectTotal"
+                @current-change="handlePageChange"
+        ></el-pagination>
+      </div>
     </div>
-    <!-- 编辑弹出框 -->
-    <el-dialog title="新增字典信息" :visible="addstudentForm" v-if='addstudentForm' size="tiny" :modal-append-to-body='false' @close='closeDialog'>
-      <el-form id="#addsForm" ref="addsForm" :model="addsForm" label-width="80px">
-        <el-form-item label="明细id" prop="id">
-          <el-input  v-model="addsForm.id" max-length="10"></el-input>
-        </el-form-item>
-        <el-form-item label="字典编号" prop="dic_id">
-          <el-input v-model="addsForm.dic_id"></el-input>
-        </el-form-item>
-        <el-form-item label="字典名称" prop="dic_name">
-          <el-input v-model="addsForm.dic_name"></el-input>
-        </el-form-item>
-        <el-form-item label="是否固定" prop="state">
-          <el-input v-model="addsForm.state"></el-input>
-        </el-form-item>
-        <el-form-item label="创建时间" prop="cre_date">
-          <el-input v-model="addsForm.cre_date"></el-input>
-        </el-form-item>
-        <el-form-item label="创建者" prop="cre_name">
-          <el-input v-model="addsForm.cre_name"></el-input>
-        </el-form-item>
-        <el-form-item label="最后一次修改时间" prop="last_date">
-          <el-input v-model="addsForm.last_date"></el-input>
-        </el-form-item>
-        <el-form-item label="最后一次修改者" prop="last_name">
-          <el-input v-model="addsForm.last_name"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="addUser()">确定</el-button>
-          <el-button @click="addstudentForm = false">取消</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
-    <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-      <el-form ref="form" :model="form" label-width="70px">
-        <el-form-item label="字典编号">
-          <el-input v-model="form.dic_id"></el-input>
-        </el-form-item>
+    <!-- 新增弹出框 -->
+    <el-dialog title="新增" :visible.sync="addVisible" width="30%">
+      <el-form ref="addform" :model="addform" label-width="70px">
         <el-form-item label="字典名称">
-          <el-input v-model="form.dic_name"></el-input>
+          <el-input v-model="addform.dicName"></el-input>
         </el-form-item>
-        <el-form-item label="是否固定">
-          <el-input v-model="form.state"></el-input>
+        <el-form-item label="Code">
+          <el-input v-model.number="addform.code"></el-input>
         </el-form-item>
-        <el-form-item label="创建时间">
-          <el-input v-model="form.cre_date"></el-input>
-        </el-form-item>
-        <el-form-item label="创建者">
-          <el-input v-model="form.cre_name"></el-input>
-        </el-form-item>
-        <el-form-item label="最后一次修改时间">
-          <el-input v-model="form.last_date"></el-input>
-        </el-form-item>
-        <el-form-item label="最后一次修改者">
-          <el-input v-model="form.last_name"></el-input>
+        <el-form-item label="字典描述">
+          <el-input v-model="addform.dicDescription"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
+      <el-button @click="addVisible = false">取 消</el-button>
+      <el-button type="primary" @click="saveAdd">确 定</el-button>
+    </span>
     </el-dialog>
+    <!-- 编辑弹出框 -->
+      <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
+        <el-form ref="form" :model="form" label-width="70px">
+          <el-form-item label="字典编号">
+            <el-input v-model.number="form.dicId" disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="字典名称">
+            <el-input v-model="form.dicName"></el-input>
+          </el-form-item>
+          <el-form-item label="Code">
+            <el-input v-model.number="form.code"></el-input>
+          </el-form-item>
+          <el-form-item label="字典描述">
+            <el-input v-model="form.dicDescription"></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+        <el-button @click="editVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveEdit">确 定</el-button>
+      </span>
+      </el-dialog>
   </div>
 </template>
+
 <script>
+import axios from "axios";
 export default {
+  name:"basetable",
   data () {
     return {
-      addsForm: {
-        id: '',
-        dic_id: '',
-        dic_name: '',
-        cre_name: '',
-        last_name: '',
-        state: '',
-        cre_date: '',
-        last_date: ''
+      query: {
+        page: 1,
+        pageSize: 5,
+        dicName: ""
       },
+      tableData: [],
+      selectTotal: 0,
+      multipleSelection: [],
+      delList: [],
+      delIdList: [],
       editVisible: false,
-      addstudentForm: false,
-      form: {},
+      addVisible: false,
+      form: {
+        dicId: 0,
+        dicName: "",
+        code: "",
+        dicDescription: ""
+      },
+      addform: {
+        dicName: "",
+        code: "",
+        dicDescription: ""
+      },
       idx: -1,
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
-      list: [{
-        id: '1',
-        dic_id: '101',
-        dic_name: '职务',
-        cre_name: '陈泽狂林',
-        last_name: '陈泽林',
-        state: '固定',
-        cre_date: '2019-11-1',
-        last_date: '2020-1-1'
-      },
-      {
-        id: '2',
-        dic_id: '200',
-        dic_name: '证件',
-        cre_name: '陈泽魔林',
-        last_name: '陈泽林',
-        state: '固定',
-        cre_date: '2019-10-11',
-        last_date: '2020-2-29'
-      },
-      {
-        id: '3',
-        dic_id: '503',
-        dic_name: '签到',
-        cre_name: '陈泽怪林',
-        last_name: '陈泽林',
-        state: '不固定',
-        cre_date: '2019-11-11',
-        last_date: '2020-3-7'
-      },
-      {
-        id: '4',
-        dic_id: '708',
-        dic_name: '状态',
-        cre_name: '陈泽猛林',
-        last_name: '陈泽林',
-        state: '固定',
-        cre_date: '2019-10-20',
-        last_date: '2020-3-20'
-      }]
-    }
+      id: -1
+    };
+  },
+  created() {
+    this.getData();
+    this.getDataCount();
   },
   methods: {
+    // 获取 easy-mock 的模拟数据
+    getData() {
+      //TODO 待加入搜索限定参数
+    axios
+      .post(
+              "http://localhost:8080/daoyunWeb_war_exploded/Dictionary/getDicByPage",
+              {
+                page: this.query.page,
+                pageSize: this.query.pageSize,
+                dicName: this.query.dicName
+              },
+              { headers: { "Content-Type": "application/json" } }
+      )
+      .then(
+              res => {
+                console.log(res);
+                if (res.status == 200) {
+                  this.tableData = res.data.data;
+                }
+              },
+              error => {
+                console.log(error);
+              }
+      );
+    },
+    getDataCount() {
+      //TODO 待加入搜索限定参数
+      axios
+        .post(
+                "http://localhost:8080/daoyunWeb_war_exploded/Dictionary/getDicCount",
+                { dicName: this.query.dicName },
+                { headers: { "Content-Type": "application/json" } }
+        )
+        .then(
+                res => {
+                  console.log(res);
+                  if (res.status == 200) {
+                    this.selectTotal = res.data.data;
+                  }
+                },
+                error => {
+                  console.log(error);
+                }
+        );
+    },
+    addDic() {
+      axios
+        .post(
+                "http://localhost:8080/daoyunWeb_war_exploded/Dictionary/addDicJson",
+                {
+                  dicName: this.addform.dicName,
+                  code: this.addform.code,
+                  dicDescription: this.addform.dicDescription
+                },
+                { headers: { "Content-Type": "application/json" } }
+        )
+        .then(
+                res => {
+                  console.log(res);
+                  if (res.status == 200) {
+                    this.getData();
+                    this.getDataCount();
+                  }
+                },
+                error => {
+                  console.log(error);
+                }
+        );
+    },
+    updateDic() {
+      axios
+        .post(
+          "http://localhost:8080/daoyunWeb_war_exploded/Dictionary/updateDicJson",
+          {
+            dicId: this.form.dicId,
+            dicName: this.form.dicName,
+            code: this.form.code,
+            dicDescription: this.form.dicDescription
+          },
+          { headers: { "Content-Type": "application/json" } }
+        )
+        .then(
+          res => {
+            console.log(res);
+            if (res.status == 200) {
+              this.getData();
+              this.getDataCount();
+            }
+          },
+          error => {
+            console.log(error);
+          }
+        );
+    },
+    deleteDic() {
+      console.log(this.form)
+      axios
+        .post(
+          "http://localhost:8080/daoyunWeb_war_exploded/Dictionary/deleteDicJson/" +
+          this.form.dicId
+        )
+        .then(
+          res => {
+            console.log(res);
+            if (res.status == 200) {
+              this.getData();
+              this.getDataCount();
+            }
+          },
+          error => {
+            console.log(error);
+          }
+        );
+    },
+    deleteDicBatch() {
+      axios
+        .post(
+          "http://localhost:8080/daoyunWeb_war_exploded/Dictionary/deleteDicBatchJson",
+          this.delIdList,
+          { headers: { "Content-Type": "application/json" } }
+        )
+        .then(
+          res => {
+            console.log(res);
+            if (res.status == 200) {
+              this.getData();
+              this.getDataCount();
+            }
+          },
+          error => {
+            console.log(error);
+          }
+        );
+    },
+    // 触发搜索按钮
+    handleSearch() {
+      this.$set(this.query, "pageIndex", 1);
+      this.getData();
+      this.getDataCount();
+    },
     // 删除操作
-    handleDelete (index) {
+    handleDelete (index,row) {
       // 二次确认删除
-      console.log(index)
+      this.idx = index;
+      this.form = row;
       this.$confirm('确定要删除吗？', '提示', {
         type: 'warning'
       })
         .then(() => {
-          this.$message.success('删除成功')
-          this.list.splice(index, 1)
+          this.deleteDic();
+          this.$message.success('删除成功');
         })
-        .catch(() => {})
+        .catch(() => {});
+    },
+    // 多选操作
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    delAllSelection() {
+      const length = this.multipleSelection.length;
+      if (length == 0) {
+        this.$message.error("请至少选中一项！");
+      } else {
+        let str = "";
+        this.delList = this.delList.concat(this.multipleSelection);
+        for (let i = 0; i < length; i++) {
+          str += this.multipleSelection[i].dicName + " ";
+          this.delIdList.push(this.multipleSelection[i].dicId);
+        }
+        this.deleteDicBatch();
+        this.$message.error(`删除了${str}`);
+        this.multipleSelection = [];
+      }
     },
     // 编辑操作
     handleEdit (index, row) {
-      this.idx = index
-      console.log(this.idx)
-      this.form = row
-      console.log(this.form)
+      this.idx = index;
+      this.form = row;
       this.editVisible = true
     },
     // 保存编辑
     saveEdit () {
-      this.editVisible = false
-      this.$message.success(`修改第 ${this.idx + 1} 行成功`)
-      this.$set(this.tableData, this.idx, this.form)
+      this.editVisible = false;
+      this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+      this.updateDic();
     },
-    addStudent () {
-      this.addstudentForm = true
+    // 新增操作
+    handleAdd() {
+      this.addVisible = true;
     },
-    closeDialog () {
-      this.addstudentForm = false
+    saveAdd() {
+      this.addDic();
+      this.addVisible = false;
     },
-    addUser () {
-      this.list.push(this.addsForm)
-      this.addstudentForm = false
+    handleDetail(index, row) {
+      this.idx = index;
+      this.form = row;
+      localStorage.setItem("dicId", this.form.dicId);
+      localStorage.setItem("dicName", this.form.dicName);
+      localStorage.setItem("code", this.form.code);
+      localStorage.setItem("dicDescription", this.form.dicDescription);
+      this.$router.push({
+        path: "/dicdetail",
+        name: "dicdetailpage"
+        //params: { paperId: this.form.paperId,paperName: this.form.paperName,paperNum: this.form.paperNum,paperDetail: this.form.paperDetail }
+      });
+    },
+    handlePageChange(val) {
+      this.$set(this.query, "page", val);
+      this.getData();
     }
   }
-}
+};
 </script>
 <style scoped>
   .handle-box {
