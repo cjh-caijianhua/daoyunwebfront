@@ -187,7 +187,15 @@ export default {
           res => {
             console.log(res);
             if (res.status == 200) {
-              this.tableData = res.data.data;
+              if (res.data.code == 0) {
+                this.tableData = res.data.data;
+                this.$message.success(res.data.msg);
+              } else if (res.data.code == -2) {
+                this.$router.push('/login');
+                this.$message.error(res.data.msg);
+              } else {
+                this.$message.error(res.data.msg);
+              }
             }
           },
           error => {
@@ -243,8 +251,15 @@ export default {
           res => {
             console.log(res);
             if (res.status == 200) {
-              this.getData();
-              this.getDataCount();
+              if (res.data.code == 0) {
+                this.getData();
+                this.getDataCount();
+              } else if (res.data.code == -2) {
+                this.$router.push('/login');
+                this.$message.error(res.data.msg);
+              } else {
+                this.$message.error(res.data.msg);
+              }
             }
           },
           error => {
@@ -269,8 +284,15 @@ export default {
           res => {
             console.log(res);
             if (res.status == 200) {
-              this.getData();
-              this.getDataCount();
+              if (res.data.code == 0) {
+                this.getData();
+                this.getDataCount();
+              } else if (res.data.code == -2) {
+                this.$router.push('/login');
+                this.$message.error(res.data.msg);
+              } else {
+                this.$message.error(res.data.msg);
+              }
             }
           },
           error => {
@@ -288,8 +310,15 @@ export default {
           res => {
             console.log(res);
             if (res.status == 200) {
-              this.getData();
-              this.getDataCount();
+              if (res.data.code == 0) {
+                this.getData();
+                this.getDataCount();
+              } else if (res.data.code == -2) {
+                this.$router.push('/login');
+                this.$message.error(res.data.msg);
+              } else {
+                this.$message.error(res.data.msg);
+              }
             }
           },
           error => {

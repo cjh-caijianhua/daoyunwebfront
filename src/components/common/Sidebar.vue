@@ -71,11 +71,11 @@ export default {
                     index: 'table',
                     title: '学生管理'
                 },
-                {
-                    icon: 'el-icon-tickets',
-                    index: 'test1',
-                    title: '教师管理'
-                },
+                // {
+                //     icon: 'el-icon-tickets',
+                //     index: 'test1',
+                //     title: '教师管理'
+                // },
                 {
                     icon: 'el-icon-tickets',
                     index: 'test2',
