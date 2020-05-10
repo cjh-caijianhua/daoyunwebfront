@@ -126,7 +126,7 @@
     import { fetchData } from '../../api/index';
     import axios from "axios";
     export default {
-        name: 'basetable',
+        name: 'course',
         data() {
             return {
                 query: {

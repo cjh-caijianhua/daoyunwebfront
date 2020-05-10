@@ -84,6 +84,14 @@ const routes = [{
                 }
             },
             {
+                path: '/teacher',
+                component: () =>
+                    import ( /*webpackChunkName: "table" */ '../components/page/TeacherManager.vue'),
+                meta: {
+                    title: '教师管理'
+                }
+            },
+            {
                 path: '/role',
                 component: () =>
                     import ( /*webpackChunkName: "role" */ '../components/page/RoleManage.vue'),

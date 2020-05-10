@@ -3,81 +3,72 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-tickets"></i> 基础表格
+                    <i class="el-icon-tickets"></i> 学生管理
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
             <div class="handle-box">
                 <el-button
-                    type="primary"
-                    icon="el-icon-delete"
-                    class="handle-del mr10"
-                    @click="delAllSelection"
+                        type="primary"
+                        icon="el-icon-delete"
+                        class="handle-del mr10"
+                        @click="handleAdd"
+                >新增学生</el-button>
+                <el-button
+                        type="primary"
+                        icon="el-icon-delete"
+                        class="handle-del mr10"
+                        @click="delAllSelection"
                 >批量删除</el-button>
-                <el-select v-model="query.address" placeholder="学校" class="handle-select mr10">
-                    <el-option key="1" label="福州大学" value="福州大学"></el-option>
-                    <el-option key="2" label="福建师范大学" value="福建师范大学"></el-option>
-                </el-select>
-                <el-input v-model="query.name" placeholder="用户名" class="handle-input mr10"></el-input>
+                <el-input v-model="query.userName" placeholder="学生姓名" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
-                :data="tableData"
-                border
-                class="table"
-                ref="multipleTable"
-                header-cell-class-name="table-header"
-                @selection-change="handleSelectionChange"
+                    :data="tableData"
+                    border
+                    class="table"
+                    ref="multipleTable"
+                    header-cell-class-name="table-header"
+                    @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="用户名"></el-table-column>
-                <el-table-column prop="school" label="学校">
-                </el-table-column>
-                <el-table-column label="头像(查看大图)" align="center">
-                    <template slot-scope="scope">
-                        <el-image
-                            class="table-td-thumb"
-                            :src="scope.row.thumb"
-                            :preview-src-list="[scope.row.thumb]"
-                        ></el-image>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="address" label="地址"></el-table-column>
-                <el-table-column label="状态" align="center">
-                    <template slot-scope="scope">
-                        <el-tag
-                            :type="scope.row.state==='成功'?'success':(scope.row.state==='失败'?'danger':'')"
-                        >{{scope.row.state}}</el-tag>
-                    </template>
-                </el-table-column>
-
-                <el-table-column prop="date" label="注册时间"></el-table-column>
+                <el-table-column prop="userId" label="学生编号" width="55" align="center"></el-table-column>
+                <el-table-column prop="userName" label="学生姓名"></el-table-column>
+                <el-table-column prop="phoneNumber" label="电话号码"></el-table-column>
+                <el-table-column prop="password" label="密码"></el-table-column>
+                <el-table-column prop="school" label="学校"></el-table-column>
+                <el-table-column prop="academy" label="学院"></el-table-column>
+                <el-table-column prop="major" label="专业"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button
-                            type="text"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.$index, scope.row)"
+                                type="text"
+                                icon="el-icon-plus"
+                                @click="handleDetail(scope.$index, scope.row)"
+                        >详情</el-button>
+                        <el-button
+                                type="text"
+                                icon="el-icon-edit"
+                                @click="handleEdit(scope.$index, scope.row)"
                         >编辑</el-button>
                         <el-button
-                            type="text"
-                            icon="el-icon-delete"
-                            class="red"
-                            @click="handleDelete(scope.$index, scope.row)"
+                                type="text"
+                                icon="el-icon-delete"
+                                class="red"
+                                @click="handleDelete(scope.$index, scope.row)"
                         >删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <div class="pagination">
                 <el-pagination
-                    background
-                    layout="total, prev, pager, next"
-                    :current-page="query.pageIndex"
-                    :page-size="query.pageSize"
-                    :total="pageTotal"
-                    @current-change="handlePageChange"
+                        background
+                        layout="total, prev, pager, next"
+                        :current-page="query.page"
+                        :page-size="query.pageSize"
+                        :total="selectTotal"
+                        @current-change="handlePageChange"
                 ></el-pagination>
             </div>
         </div>
@@ -85,59 +76,150 @@
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
             <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="用户名">
-                    <el-input v-model="form.name"></el-input>
+                <el-form-item label="字典编号">
+                    <el-input v-model.number="form.paperId" disabled="true"></el-input>
                 </el-form-item>
-                <el-form-item label="地址">
-                    <el-input v-model="form.address"></el-input>
+                <el-form-item label="字典名称">
+                    <el-input v-model="form.paperName"></el-input>
+                </el-form-item>
+                <el-form-item label="Code">
+                    <el-input v-model.number="form.paperNum"></el-input>
+                </el-form-item>
+                <el-form-item label="字典描述">
+                    <el-input v-model="form.paperDetail"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
+        <el-button @click="editVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveEdit">确 定</el-button>
+      </span>
+        </el-dialog>
+
+        <!-- 新增弹出框 -->
+        <el-dialog title="新增" :visible.sync="addVisible" width="30%">
+            <el-form ref="addform" :model="addForm" label-width="70px">
+                <el-form-item label="字典名称">
+                    <el-input v-model="addForm.paperName"></el-input>
+                </el-form-item>
+                <el-form-item label="Code">
+                    <el-input v-model.number="addForm.paperNum"></el-input>
+                </el-form-item>
+                <el-form-item label="字典描述">
+                    <el-input v-model="addForm.paperDetail"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+        <el-button @click="addVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveAdd">确 定</el-button>
+      </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
 import { fetchData } from '../../api/index';
+import axios from "axios";
 export default {
-    name: 'basetable',
+    name: 'student',
     data() {
         return {
             query: {
-                address: '',
-                name: '',
-                pageIndex: 1,
-                pageSize: 10
+                page: 1,
+                pageSize: 5,
+                userName: ""
             },
             tableData: [],
+            selectTotal: 0,
             multipleSelection: [],
             delList: [],
+            delIdList: [],
             editVisible: false,
-            pageTotal: 0,
-            form: {},
+            addVisible: false,
+            form: {
+                userId: 0,
+                userName: "",
+                phoneNumber: 0,
+                password: 0,
+                school: "",
+                academy: "",
+                major: ""
+            },
+            addForm: {
+                userId: 0,
+                userName: "",
+                phoneNumber: 0,
+                password: 0,
+                school: "",
+                academy: "",
+                major: ""
+            },
             idx: -1,
             id: -1
         };
     },
     created() {
         this.getData();
+        this.getDataCount();
     },
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
+            //TODO 待加入搜索限定参数
+            axios
+                .post(
+                    "http://localhost:8080/daoyunWeb/student/getStudentByPage",
+                    {
+                        page: this.query.page,
+                        pageSize: this.query.pageSize,
+                        userName: this.query.userName
+                    },
+                    { headers: { "Content-Type": "application/json" } }
+                )
+                .then(
+                    res => {
+                        console.log(res);
+                        if (res.status == 200) {
+                            if (res.data.code == 0) {
+                                this.tableData = res.data.data;
+                                this.$message.success(res.data.msg);
+                            } else if (res.data.code == -2) {
+                                this.$router.push('/login');
+                                this.$message.error(res.data.msg);
+                            } else {
+                                this.$message.error(res.data.msg);
+                            }
+                        }
+                    },
+                    error => {
+                        console.log(error);
+                    }
+                );
+        },
+        getDataCount() {
+            //TODO 待加入搜索限定参数
+            axios
+                .post(
+                    "http://localhost:8080/daoyunWeb/student/getStudentCount",
+                    { userName: this.query.userName },
+                    { headers: { "Content-Type": "application/json" } }
+                )
+                .then(
+                    res => {
+                        console.log(res);
+                        if (res.status == 200) {
+                            this.selectTotal = res.data.data;
+                        }
+                    },
+                    error => {
+                        console.log(error);
+                    }
+                );
         },
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
             this.getData();
+            this.getDataCount();
         },
         // 删除操作
         handleDelete(index, row) {
@@ -179,7 +261,7 @@ export default {
         },
         // 分页导航
         handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
+            this.$set(this.query, 'page', val);
             this.getData();
         }
     }
