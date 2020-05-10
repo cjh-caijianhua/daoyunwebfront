@@ -83,7 +83,7 @@ export default {
                 },
                 {
                     icon: 'el-icon-tickets',
-                    index: 'test1',
+                    index: 'dictionary',
                     title: '数据字典管理'
                 },
                 {
