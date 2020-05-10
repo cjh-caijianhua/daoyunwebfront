@@ -175,7 +175,7 @@
             getData() {
                 axios
                     .post(
-                        "http://localhost:8080/daoyunWeb_war_exploded/DictionaryDetail/getDicdByPage",
+                        "http://localhost:8080/daoyunWeb/DictionaryDetail/getDicdByPage",
                         {
                             page: this.query.page,
                             pageSize: this.query.pageSize,
@@ -210,7 +210,7 @@
                 //TODO 待加入搜索限定参数
                 axios
                     .post(
-                        "http://localhost:8080/daoyunWeb_war_exploded/DictionaryDetail/getDicdCount/" +
+                        "http://localhost:8080/daoyunWeb/DictionaryDetail/getDicdCount/" +
                         this.dicId
                     )
                     .then(
@@ -228,7 +228,7 @@
             updateDicd() {
                 axios
                     .post(
-                        "http://localhost:8080/daoyunWeb_war_exploded/DictionaryDetail/updateDicdJson",
+                        "http://localhost:8080/daoyunWeb/DictionaryDetail/updateDicdJson",
                         {
                             id: this.form.id,
                             dicId: this.form.dicId,
@@ -255,7 +255,7 @@
             addDicd() {
                 axios
                     .post(
-                        "http://localhost:8080/daoyunWeb_war_exploded/DictionaryDetail/addDicdJson",
+                        "http://localhost:8080/daoyunWeb/DictionaryDetail/addDicdJson",
                         {
                             dicId: this.dicId,
                             itemKey: this.addform.itemKey,
@@ -281,7 +281,7 @@
             deleteDicd() {
                 axios
                     .post(
-                        "http://localhost:8080/daoyunWeb_war_exploded/DictionaryDetail/deleteDicdJson/" +
+                        "http://localhost:8080/daoyunWeb/DictionaryDetail/deleteDicdJson/" +
                         this.form.id
                     )
                     .then(
