@@ -114,6 +114,9 @@
         <el-form-item label="Code">
           <el-input v-model="addform.code"></el-input>
         </el-form-item>
+        <el-form-item label="分类">
+          <el-cascader :props="props"></el-cascader>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addVisible = false">取 消</el-button>
@@ -129,7 +132,41 @@ import axios from "axios";
 export default {
   name: "basetable",
   data() {
+    let that = this;//修改this指向，因为此时this指向的是控件本身，而不是vue实例，则无法调用内部函数
     return {
+      props: {
+          lazy: true,
+          checkStrictly: true,
+          lazyLoad (node, resolve) {//级联选择器懒加载
+            const { level } = node;
+            if (node.level == 0) {//根节点数据处理
+              that.getData()
+              setTimeout(() => {
+              const nodes = that.tableData
+                .map(item => ({
+                  value: item.id,
+                  label: item.itemValue,
+                }));
+              // 通过调用resolve将子节点数据返回，通知组件数据加载完成
+              resolve(nodes);
+              },500);
+              }
+              else{//后续子节点数据处理
+              that.getChildrenPaperDetail(node.value)
+              setTimeout(() => {
+              const nodes = that.childrenData
+                .map(item => ({
+                  value: item.id,
+                  label: item.itemValue,
+                  leaf: level >= 5,
+                  length: level + 1
+                }));
+              // 通过调用resolve将子节点数据返回，通知组件数据加载完成
+              resolve(nodes);
+              },500);
+            }
+          }
+        },
       query: {
         page: 1,
         pageSize: 10
@@ -144,6 +181,8 @@ export default {
       delList: [],
       editVisible: false,
       addVisible: false,
+      classificationTable: [
+      ],
       childrenData: [
         {
           id:0,
