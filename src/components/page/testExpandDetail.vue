@@ -140,9 +140,9 @@ export default {
           lazyLoad (node, resolve) {//级联选择器懒加载
             const { level } = node;
             if (node.level == 0) {//根节点数据处理
-              that.getData()
+              that.getAllPaperDetailRoot()
               setTimeout(() => {
-              const nodes = that.tableData
+              const nodes = that.rootData
                 .map(item => ({
                   value: item.id,
                   label: item.itemValue,
@@ -181,7 +181,7 @@ export default {
       delList: [],
       editVisible: false,
       addVisible: false,
-      classificationTable: [
+      rootData: [
       ],
       childrenData: [
         {
@@ -399,6 +399,32 @@ export default {
             if (res.status == 200) {
               if (res.data.code == 0) {
                 this.childrenData = res.data.data;
+                this.$message.success(res.data.msg);
+              } else if (res.data.code == -2) {
+                this.$router.push('/login');
+                this.$message.error(res.data.msg);
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            }
+          },
+          error => {
+            console.log(error);
+          }
+        );
+    },
+    getAllPaperDetailRoot(paperId) {
+      paperId = this.paperId;
+      axios
+        .post(
+          "http://localhost:8080/daoyunWeb/testDetailExample/getAllPaperDetailRoot/"+paperId,
+        )
+        .then(
+          res => {
+            console.log(res);
+            if (res.status == 200) {
+              if (res.data.code == 0) {
+                this.rootData = res.data.data;
                 this.$message.success(res.data.msg);
               } else if (res.data.code == -2) {
                 this.$router.push('/login');
