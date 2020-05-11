@@ -141,6 +141,23 @@ const routes = [{
                 }
             },
             {
+                path: '/testexpand',
+                component: () =>
+                    import ( /*webpackChunkName: "testexpand" */ '../components/page/testExpand.vue'),
+                meta: {
+                    title: '测试树形表格页面'
+                }
+            },
+            {
+                path: '/testexpanddetail',
+                name: 'testexpanddetailpage',
+                component: () =>
+                    import ( /*webpackChunkName: "testexpanddetail" */ '../components/page/testExpandDetail.vue'),
+                meta: {
+                    title: '测试树形表格详情页面'
+                }
+            },
+            {
                 path: '/dicdetail',
                 name: 'dicdetailpage',
                 component: () =>

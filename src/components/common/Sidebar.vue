@@ -92,6 +92,11 @@ export default {
                     title: '测试页面'
                 },
                 {
+                    icon: 'el-icon-tickets',
+                    index: 'testexpand',
+                    title: '测试树形表格页面'
+                },
+                {
                     icon: 'el-icon-files',
                     index: '3',
                     title: '表单相关',
