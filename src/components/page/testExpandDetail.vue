@@ -100,7 +100,7 @@
     </el-dialog>
 
     <!-- 新增弹出框 -->
-    <el-dialog title="新增" :visible.sync="addVisible" width="30%">
+    <el-dialog title="新增" :visible.sync="addVisible" width="30%" v-if="addVisible">
       <el-form ref="addform" :model="addform" label-width="100px">
         <el-form-item label="ItemKey">
           <el-input v-model.number="addform.itemKey"></el-input>
@@ -115,7 +115,7 @@
           <el-input v-model="addform.code"></el-input>
         </el-form-item>
         <el-form-item label="分类">
-          <el-cascader :props="props"></el-cascader>
+          <el-cascader :props="props" v-model="rootData" clearable></el-cascader>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
