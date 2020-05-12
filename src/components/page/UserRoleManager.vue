@@ -3,21 +3,21 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-tickets"></i> 课程管理
+                    <i class="el-icon-tickets"></i> 用户管理
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
-            <div class='handle-box'>
-                <el-button type="primary" class="handle-del mr10" @click="handleAdd" round>+新增课程</el-button>
-
-                <!-- <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection" round>删除所选课程</el-button> -->
-
-                <el-input v-model="query.courseName" placeholder="课程名" class="handle-input mr10"></el-input>
-
+            <div class="handle-box">
+                <el-button
+                        type="primary"
+                        icon="el-icon-delete"
+                        class="handle-del mr10"
+                        @click="handleAdd"
+                >新增</el-button>
+                <el-input v-model="query.userName" placeholder="账号名" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
-
             <el-table
                     :data="tableData"
                     border
@@ -27,20 +27,13 @@
                     @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="courseId" label="ID" width="55" align="center" v-if="hideRow"></el-table-column>
-                <el-table-column prop="courseName" label="课程名"></el-table-column>
-                <el-table-column prop="userName" label="教师名"></el-table-column>
-                <el-table-column prop="courseHour" label="课程学时"></el-table-column>
-                <el-table-column prop="startTime" label="开课时间"></el-table-column>
-                <el-table-column prop="coursePlace" label="教室"></el-table-column>
-
+                <el-table-column prop="id" label="编号" width="55"  v-if="hideRow" align="center"></el-table-column>
+                <el-table-column prop="userId" label="用户编号"  v-if="hideRow"></el-table-column>
+                <el-table-column prop="userName" label="账号名"  ></el-table-column>
+                <el-table-column prop="roleId" label="角色编号"  v-if="hideRow"></el-table-column>
+                <el-table-column prop="roleName" label="角色"  ></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button
-                                type="text"
-                                icon="el-icon-plus"
-                                @click="handleDetail(scope.$index, scope.row)"
-                        >详情</el-button>
                         <el-button
                                 type="text"
                                 icon="el-icon-edit"
@@ -70,54 +63,53 @@
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
             <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="课程编号" v-if="hideRow">
-                    <el-input readonly="true" v-model.number="form.courseId" ></el-input>
+                <el-form-item label="用户编号"  v-if="hideRow">
+                    <el-input v-model.number="form.id" disabled="true"></el-input>
                 </el-form-item>
-                <el-form-item label="课程名">
-                    <el-input v-model="form.courseName"></el-input>
+                <el-form-item label="用户账号"  v-if="hideRow" >
+                    <el-input v-model.number="form.userId"></el-input>
                 </el-form-item>
-                <el-form-item label="教师名">
+                <el-form-item label="账号名">
                     <el-input v-model="form.userName"></el-input>
                 </el-form-item>
-                <el-form-item label="课程学时">
-                    <el-input v-model.number="form.courseHour"></el-input>
-                </el-form-item>
-                <el-form-item label="开课时间">
-                     <el-input v-model="form.startTime"></el-input>
-                 </el-form-item>
-                <el-form-item label="教室">
-                    <el-input v-model="form.coursePlace"></el-input>
+                <el-form-item label="角色">
+                    <el-radio-group v-model="form.roleName"  v-for="item in roleList":key="item.roleId">
+                        <el-radio-button :label="item.roleName"></el-radio-button>
+                    </el-radio-group>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-              <el-button @click="editVisible = false">取 消</el-button>
-              <el-button type="primary" @click="saveEdit">确 定</el-button>
-          </span>
+        <el-button @click="editVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveEdit">确 定</el-button>
+      </span>
         </el-dialog>
 
         <!-- 新增弹出框 -->
         <el-dialog title="新增" :visible.sync="addVisible" width="30%">
             <el-form ref="addForm" :model="addForm" label-width="70px">
-                <el-form-item label="课程名">
-                    <el-input v-model="addForm.courseName"></el-input>
-                </el-form-item>
-                <el-form-item label="教师名">
+                <el-form-item label="教师姓名">
                     <el-input v-model="addForm.userName"></el-input>
                 </el-form-item>
-                <el-form-item label="开始时间">
-                    <el-input v-model="addForm.startTime"></el-input>
+                <el-form-item label="电话号码">
+                    <el-input v-model.number="addForm.phoneNumber"></el-input>
                 </el-form-item>
-                <el-form-item label="课程学时">
-                    <el-input v-model.number="addForm.courseHour"></el-input>
+                <el-form-item label="密码">
+                    <el-input v-model="addForm.password"></el-input>
                 </el-form-item>
-                <el-form-item label="教室">
-                    <el-input v-model="addForm.coursePlace"></el-input>
+                <el-form-item label="学校">
+                    <el-input v-model="addForm.school"></el-input>
+                </el-form-item>
+                <el-form-item label="学院">
+                    <el-input v-model="addForm.academy"></el-input>
+                </el-form-item>
+                <el-form-item label="专业">
+                    <el-input v-model="addForm.major"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-             <el-button @click="addVisible = false">取 消</el-button>
-             <el-button type="primary" @click="saveAdd">确 定</el-button>
-          </span>
+        <el-button @click="addVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveAdd">确 定</el-button>
+      </span>
         </el-dialog>
     </div>
 </template>
@@ -126,36 +118,35 @@
     import { fetchData } from '../../api/index';
     import axios from "axios";
     export default {
-        name: 'course',
+        name: 'student',
         data() {
             return {
                 query: {
-                    page:1,
+                    page: 1,
                     pageSize: 5,
-                    courseName: ""
+                    userName: ""
                 },
                 tableData: [],
                 selectTotal: 0,
                 multipleSelection: [],
                 delList: [],
                 delIdList: [],
+                roleList:[],
                 editVisible: false,
                 addVisible: false,
                 form: {
-                    courseId: 1,
-                    courseName: "",
-                    teachId: 1,
+                    id:0,
+                    userId: 0,
                     userName: "",
-                    startTime: "",
-                    courseHour: 54,
-                    coursePlace: "",
+                    roleId: 0,
+                    roleName: "",
                 },
                 addForm: {
-                    courseName: "",
+                    id:0,
+                    userId: 0,
                     userName: "",
-                    startTime: "2019-02-06 00:00:00",
-                    courseHour: 54,
-                    coursePlace: "",
+                    roleId: 0,
+                    roleName: "",
                 },
                 idx: -1,
                 id: -1
@@ -164,17 +155,19 @@
         created() {
             this.getData();
             this.getDataCount();
+            this.getAllRoleData();
         },
         methods: {
             // 获取 easy-mock 的模拟数据
             getData() {
+                //TODO 待加入搜索限定参数
                 axios
                     .post(
-                        "http://localhost:8080/daoyunWeb/course/getCourseByPage",
+                        "http://localhost:8080/daoyunWeb/userRole/getUserRoleByPage",
                         {
                             page: this.query.page,
                             pageSize: this.query.pageSize,
-                            courseName: this.query.courseName
+                            userName: this.query.userName
                         },
                         { headers: { "Content-Type": "application/json" } }
                     )
@@ -202,8 +195,8 @@
                 //TODO 待加入搜索限定参数
                 axios
                     .post(
-                        "http://localhost:8080/daoyunWeb/course/getCourseCount",
-                        { courseName: this.query.courseName },
+                        "http://localhost:8080/daoyunWeb/userRole/getUserRoleCount",
+                        { userName: this.query.userName },
                         { headers: { "Content-Type": "application/json" } }
                     )
                     .then(
@@ -218,18 +211,47 @@
                         }
                     );
             },
-            updateCourse() {
+            getAllRoleData() {
+                //TODO 待加入搜索限定参数
                 axios
                     .post(
-                        "http://localhost:8080/daoyunWeb/course/updateCourseJson",
+                        "http://localhost:8080/daoyunWeb/userRole/getAllRole",
                         {
-                            courseId: this.form.courseId,
-                            courseName: this.form.courseName,
-                            teachId: this.form.teachId,
-                            userName:this.form.userName,
-                            courseHour: this.form.courseHour,
-                            startTime:this.form.startTime,
-                            coursePlace: this.form.coursePlace
+                            page: this.query.page,
+                            pageSize: this.query.pageSize,
+                        },
+                        { headers: { "Content-Type": "application/json" } }
+                    )
+                    .then(
+                        res => {
+                            console.log(res);
+                            if (res.status == 200) {
+                                if (res.data.code == 0) {
+                                    this.roleList = res.data.data;
+                                    this.$message.success(res.data.msg);
+                                } else if (res.data.code == -2) {
+                                    this.$router.push('/login');
+                                    this.$message.error(res.data.msg);
+                                } else {
+                                    this.$message.error(res.data.msg);
+                                }
+                            }
+                        },
+                        error => {
+                            console.log(error);
+                        }
+                    );
+            },
+            updateUserRole() {
+                axios
+                    .post(
+                        "http://localhost:8080/daoyunWeb/userRole/updateUserRoleJson",
+                        {
+                            id: this.form.id,
+                            userId: this.form.userId,
+                            userName: this.form.userName,
+                            roleId: this.form.roleId,
+                            roleName: this.form.roleName,
                         },
                         { headers: { "Content-Type": "application/json" } }
                     )
@@ -240,6 +262,7 @@
                                 if (res.data.code == 0) {
                                     this.getData();
                                     this.getDataCount();
+                                    this.getAllRoleData();
                                 } else if (res.data.code == -2) {
                                     this.$router.push({ path: "/login" });
                                     this.$message.error(res.data.msg);
@@ -254,16 +277,18 @@
                     );
             },
             // 增加课程
-            addCourse(){
+            addTeacher(){
                 axios
                     .post(
-                        "http://localhost:8080/daoyunWeb/course/addCourseJson",
+                        "http://localhost:8080/daoyunWeb/teacher/addTeacherJson",
                         {
-                            courseName: this.addForm.courseName,
-                            userName:this.addForm.userName,
-                            courseHour: this.addForm.courseHour,
-                            startTime:this.addForm.startTime,
-                            coursePlace: this.addForm.coursePlace
+                            userId: this.addForm.userId,
+                            userName: this.addForm.userName,
+                            phoneNumber: this.addForm.phoneNumber,
+                            password: this.addForm.password,
+                            school: this.addForm.school,
+                            academy: this.addForm.academy,
+                            major: this.addForm.major
                         },
                         { headers: { "Content-Type": "application/json" } }
                     )
@@ -289,9 +314,10 @@
             },
             // 触发搜索按钮
             handleSearch() {
-                this.$set(this.query, "pageIndex", 1);
+                this.$set(this.query, 'pageIndex', 1);
                 this.getData();
                 this.getDataCount();
+                this.getAllRoleData();
             },
             // 删除操作
             handleDelete(index, row) {
@@ -319,27 +345,26 @@
                 this.$message.error(`删除了${str}`);
                 this.multipleSelection = [];
             },
-            // 新增操作
-            handleAdd() {
-                this.addVisible = true;
-            },
-            // 保存新增
-            saveAdd() {
-                this.addCourse();
-                this.addVisible = false;
-            },
             // 编辑操作
             handleEdit(index, row) {
                 this.idx = index;
                 this.form = row;
                 this.editVisible = true;
             },
+            // 新增操作
+            handleAdd() {
+                this.addVisible = true;
+            },
+            // 保存新增
+            saveAdd() {
+                this.addTeacher();
+                this.addVisible = false;
+            },
             // 保存编辑
             saveEdit() {
                 this.editVisible = false;
-                this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-                this.updateCourse();
-                //this.$set(this.tableData, this.idx, this.form);
+                this.$message.success(`修改成功`);
+                this.updateUserRole();
             },
             // 分页导航
             handlePageChange(val) {
@@ -349,7 +374,6 @@
         }
     };
 </script>
-
 
 <style scoped>
     .handle-box {

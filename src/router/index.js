@@ -90,6 +90,15 @@ const routes = [{
                 meta: {
                     title: '教师管理'
                 }
+
+            },
+            {
+                path: '/userRole',
+                component: () =>
+                    import ( /*webpackChunkName: "role" */ '../components/page/UserRoleManager'),
+                meta: {
+                    title: '用户管理'
+                }
             },
             {
                 path: '/role',

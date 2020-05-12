@@ -68,13 +68,18 @@ export default {
                 },
                 {
                     icon: 'el-icon-tickets',
-                    index: 'table',
+                    index: 'student',
                     title: '学生管理'
                 },
                 {
                     icon: 'el-icon-tickets',
                     index: 'teacher',
                     title: '教师管理'
+                },
+                {
+                    icon: 'el-icon-tickets',
+                    index: 'userRole',
+                    title: '用户管理'
                 },
                 {
                     icon: 'el-icon-tickets',
