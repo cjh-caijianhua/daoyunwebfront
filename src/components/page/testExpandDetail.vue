@@ -100,7 +100,7 @@
     </el-dialog>
 
     <!-- 新增弹出框 -->
-    <el-dialog title="新增" :visible.sync="addVisible" width="30%">
+    <el-dialog title="新增" :visible.sync="addVisible" width="30%" v-if="addVisible">
       <el-form ref="addform" :model="addform" label-width="100px">
         <el-form-item label="ItemKey">
           <el-input v-model.number="addform.itemKey"></el-input>
@@ -113,6 +113,9 @@
         </el-form-item>
         <el-form-item label="Code">
           <el-input v-model="addform.code"></el-input>
+        </el-form-item>
+        <el-form-item label="分类">
+          <el-cascader :props="props" v-model="rootData" clearable></el-cascader>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -129,7 +132,41 @@ import axios from "axios";
 export default {
   name: "basetable",
   data() {
+    let that = this;//修改this指向，因为此时this指向的是控件本身，而不是vue实例，则无法调用内部函数
     return {
+      props: {
+          lazy: true,
+          checkStrictly: true,
+          lazyLoad (node, resolve) {//级联选择器懒加载
+            const { level } = node;
+            if (node.level == 0) {//根节点数据处理
+              that.getAllPaperDetailRoot()
+              setTimeout(() => {
+              const nodes = that.rootData
+                .map(item => ({
+                  value: item.id,
+                  label: item.itemValue,
+                }));
+              // 通过调用resolve将子节点数据返回，通知组件数据加载完成
+              resolve(nodes);
+              },500);
+              }
+              else{//后续子节点数据处理
+              that.getChildrenPaperDetail(node.value)
+              setTimeout(() => {
+              const nodes = that.childrenData
+                .map(item => ({
+                  value: item.id,
+                  label: item.itemValue,
+                  leaf: level >= 5,
+                  length: level + 1
+                }));
+              // 通过调用resolve将子节点数据返回，通知组件数据加载完成
+              resolve(nodes);
+              },500);
+            }
+          }
+        },
       query: {
         page: 1,
         pageSize: 10
@@ -144,6 +181,8 @@ export default {
       delList: [],
       editVisible: false,
       addVisible: false,
+      rootData: [
+      ],
       childrenData: [
         {
           id:0,
@@ -360,6 +399,32 @@ export default {
             if (res.status == 200) {
               if (res.data.code == 0) {
                 this.childrenData = res.data.data;
+                this.$message.success(res.data.msg);
+              } else if (res.data.code == -2) {
+                this.$router.push('/login');
+                this.$message.error(res.data.msg);
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            }
+          },
+          error => {
+            console.log(error);
+          }
+        );
+    },
+    getAllPaperDetailRoot(paperId) {
+      paperId = this.paperId;
+      axios
+        .post(
+          "http://localhost:8080/daoyunWeb/testDetailExample/getAllPaperDetailRoot/"+paperId,
+        )
+        .then(
+          res => {
+            console.log(res);
+            if (res.status == 200) {
+              if (res.data.code == 0) {
+                this.rootData = res.data.data;
                 this.$message.success(res.data.msg);
               } else if (res.data.code == -2) {
                 this.$router.push('/login');
