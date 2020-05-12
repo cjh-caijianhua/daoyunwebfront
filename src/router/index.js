@@ -76,11 +76,11 @@ const routes = [{
                 },
             },
             {
-                path: '/table',
+                path: '/student',
                 component: () =>
                     import ( /*webpackChunkName: "table" */ '../components/page/BaseTable.vue'),
                 meta: {
-                    title: '基础表格'
+                    title: '学生管理'
                 }
             },
             {
