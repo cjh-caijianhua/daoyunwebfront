@@ -15,12 +15,6 @@
                         class="handle-del mr10"
                         @click="handleAdd"
                 >新增老师</el-button>
-                <el-button
-                        type="primary"
-                        icon="el-icon-delete"
-                        class="handle-del mr10"
-                        @click="delAllSelection"
-                >批量删除</el-button>
                 <el-input v-model="query.userName" placeholder="教师姓名" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
@@ -42,11 +36,6 @@
                 <el-table-column prop="major" label="专业"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button
-                                type="text"
-                                icon="el-icon-plus"
-                                @click="handleDetail(scope.$index, scope.row)"
-                        >详情</el-button>
                         <el-button
                                 type="text"
                                 icon="el-icon-edit"
@@ -76,17 +65,26 @@
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
             <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="字典编号">
-                    <el-input v-model.number="form.paperId" disabled="true"></el-input>
+                <el-form-item label="教师编号">
+                    <el-input v-model.number="form.userId" disabled="true"></el-input>
                 </el-form-item>
-                <el-form-item label="字典名称">
-                    <el-input v-model="form.paperName"></el-input>
+                <el-form-item label="教师姓名">
+                    <el-input v-model="form.userName"></el-input>
                 </el-form-item>
-                <el-form-item label="Code">
-                    <el-input v-model.number="form.paperNum"></el-input>
+                <el-form-item label="电话号码">
+                    <el-input v-model.number="form.phoneNumber"></el-input>
                 </el-form-item>
-                <el-form-item label="字典描述">
-                    <el-input v-model="form.paperDetail"></el-input>
+                <el-form-item label="密码">
+                    <el-input v-model="form.password"></el-input>
+                </el-form-item>
+                <el-form-item label="学校">
+                    <el-input v-model="form.school"></el-input>
+                </el-form-item>
+                <el-form-item label="学院">
+                    <el-input v-model="form.academy"></el-input>
+                </el-form-item>
+                <el-form-item label="专业">
+                    <el-input v-model="form.major"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -97,15 +95,24 @@
 
         <!-- 新增弹出框 -->
         <el-dialog title="新增" :visible.sync="addVisible" width="30%">
-            <el-form ref="addform" :model="addForm" label-width="70px">
-                <el-form-item label="字典名称">
-                    <el-input v-model="addForm.paperName"></el-input>
+            <el-form ref="addForm" :model="addForm" label-width="70px">
+                <el-form-item label="教师姓名">
+                    <el-input v-model="addForm.userName"></el-input>
                 </el-form-item>
-                <el-form-item label="Code">
-                    <el-input v-model.number="addForm.paperNum"></el-input>
+                <el-form-item label="电话号码">
+                    <el-input v-model.number="addForm.phoneNumber"></el-input>
                 </el-form-item>
-                <el-form-item label="字典描述">
-                    <el-input v-model="addForm.paperDetail"></el-input>
+                <el-form-item label="密码">
+                    <el-input v-model="addForm.password"></el-input>
+                </el-form-item>
+                <el-form-item label="学校">
+                    <el-input v-model="addForm.school"></el-input>
+                </el-form-item>
+                <el-form-item label="学院">
+                    <el-input v-model="addForm.academy"></el-input>
+                </el-form-item>
+                <el-form-item label="专业">
+                    <el-input v-model="addForm.major"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -215,6 +222,77 @@
                         }
                     );
             },
+            updateTeacher() {
+                axios
+                    .post(
+                        "http://localhost:8080/daoyunWeb/teacher/updateTeacherJson",
+                        {
+                            userId: this.form.userId,
+                            userName: this.form.userName,
+                            phoneNumber: this.form.phoneNumber,
+                            password: this.form.password,
+                            school: this.form.school,
+                            academy: this.form.academy,
+                            major: this.form.major
+                        },
+                        { headers: { "Content-Type": "application/json" } }
+                    )
+                    .then(
+                        res => {
+                            console.log(res);
+                            if (res.status == 200) {
+                                if (res.data.code == 0) {
+                                    this.getData();
+                                    this.getDataCount();
+                                } else if (res.data.code == -2) {
+                                    this.$router.push({ path: "/login" });
+                                    this.$message.error(res.data.msg);
+                                } else {
+                                    this.$message.error(res.data.msg);
+                                }
+                            }
+                        },
+                        error => {
+                            console.log(error);
+                        }
+                    );
+            },
+            // 增加课程
+            addTeacher(){
+                axios
+                    .post(
+                        "http://localhost:8080/daoyunWeb/teacher/addTeacherJson",
+                        {
+                            userId: this.addForm.userId,
+                            userName: this.addForm.userName,
+                            phoneNumber: this.addForm.phoneNumber,
+                            password: this.addForm.password,
+                            school: this.addForm.school,
+                            academy: this.addForm.academy,
+                            major: this.addForm.major
+                        },
+                        { headers: { "Content-Type": "application/json" } }
+                    )
+                    .then(
+                        res => {
+                            console.log(res);
+                            if (res.status == 200) {
+                                if (res.data.code == 0) {
+                                    this.getData();
+                                    this.getDataCount();
+                                } else if (res.data.code == -2) {
+                                    this.$router.push('/login');
+                                    this.$message.error(res.data.msg);
+                                } else {
+                                    this.$message.error(res.data.msg);
+                                }
+                            }
+                        },
+                        error => {
+                            console.log(error);
+                        }
+                    );
+            },
             // 触发搜索按钮
             handleSearch() {
                 this.$set(this.query, 'pageIndex', 1);
@@ -253,11 +331,20 @@
                 this.form = row;
                 this.editVisible = true;
             },
+            // 新增操作
+            handleAdd() {
+                this.addVisible = true;
+            },
+            // 保存新增
+            saveAdd() {
+                this.addTeacher();
+                this.addVisible = false;
+            },
             // 保存编辑
             saveEdit() {
                 this.editVisible = false;
                 this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-                this.$set(this.tableData, this.idx, this.form);
+                this.updateTeacher();
             },
             // 分页导航
             handlePageChange(val) {
