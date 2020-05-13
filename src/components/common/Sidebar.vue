@@ -68,13 +68,18 @@ export default {
                 },
                 {
                     icon: 'el-icon-tickets',
-                    index: 'table',
+                    index: 'student',
                     title: '学生管理'
                 },
                 {
                     icon: 'el-icon-tickets',
-                    index: 'test1',
+                    index: 'teacher',
                     title: '教师管理'
+                },
+                {
+                    icon: 'el-icon-tickets',
+                    index: 'userRole',
+                    title: '用户管理'
                 },
                 {
                     icon: 'el-icon-tickets',
@@ -83,13 +88,18 @@ export default {
                 },
                 {
                     icon: 'el-icon-tickets',
-                    index: 'test1',
+                    index: 'dictionary',
                     title: '数据字典管理'
                 },
                 {
                     icon: 'el-icon-tickets',
                     index: 'test',
                     title: '测试页面'
+                },
+                {
+                    icon: 'el-icon-tickets',
+                    index: 'testexpand',
+                    title: '测试树形表格页面'
                 },
                 {
                     icon: 'el-icon-files',

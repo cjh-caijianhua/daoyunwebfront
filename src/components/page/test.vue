@@ -14,18 +14,14 @@
           icon="el-icon-delete"
           class="handle-del mr10"
           @click="handleAdd"
-        >新增论文</el-button>
+        >新增字典</el-button>
         <el-button
           type="primary"
           icon="el-icon-delete"
           class="handle-del mr10"
           @click="delAllSelection"
         >批量删除</el-button>
-        <el-select v-model="query.address" placeholder="学校" class="handle-select mr10">
-          <el-option key="1" label="福州大学" value="福州大学"></el-option>
-          <el-option key="2" label="福建师范大学" value="福建师范大学"></el-option>
-        </el-select>
-        <el-input v-model="query.name" placeholder="用户名" class="handle-input mr10"></el-input>
+        <el-input v-model="query.paperName" placeholder="字典名称" class="handle-input mr10"></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
       </div>
       <el-table
@@ -37,15 +33,15 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column prop="paperId" label="ID" width="55" align="center"></el-table-column>
-        <el-table-column prop="paperName" label="论文名称"></el-table-column>
-        <el-table-column prop="paperNum" label="论文数量"></el-table-column>
-        <el-table-column prop="paperDetail" label="论文详情"></el-table-column>
+        <el-table-column prop="paperId" label="字典编号" width="55" align="center"></el-table-column>
+        <el-table-column prop="paperName" label="字典名称"></el-table-column>
+        <el-table-column prop="paperNum" label="Code"></el-table-column>
+        <el-table-column prop="paperDetail" label="字典描述"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
             <el-button
               type="text"
-              icon="el-icon-edit"
+              icon="el-icon-plus"
               @click="handleDetail(scope.$index, scope.row)"
             >详情</el-button>
             <el-button
@@ -77,16 +73,16 @@
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
       <el-form ref="form" :model="form" label-width="70px">
-        <el-form-item label="论文Id">
-          <el-input v-model="form.paperId" disabled="true"></el-input>
+        <el-form-item label="字典编号">
+          <el-input v-model.number="form.paperId" disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="论文名称">
+        <el-form-item label="字典名称">
           <el-input v-model="form.paperName"></el-input>
         </el-form-item>
-        <el-form-item label="论文数量">
+        <el-form-item label="Code">
           <el-input v-model.number="form.paperNum"></el-input>
         </el-form-item>
-        <el-form-item label="论文详情">
+        <el-form-item label="字典描述">
           <el-input v-model="form.paperDetail"></el-input>
         </el-form-item>
       </el-form>
@@ -99,13 +95,13 @@
     <!-- 新增弹出框 -->
     <el-dialog title="新增" :visible.sync="addVisible" width="30%">
       <el-form ref="addform" :model="addform" label-width="70px">
-        <el-form-item label="论文名称">
+        <el-form-item label="字典名称">
           <el-input v-model="addform.paperName"></el-input>
         </el-form-item>
-        <el-form-item label="论文数量">
+        <el-form-item label="Code">
           <el-input v-model.number="addform.paperNum"></el-input>
         </el-form-item>
-        <el-form-item label="论文详情">
+        <el-form-item label="字典描述">
           <el-input v-model="addform.paperDetail"></el-input>
         </el-form-item>
       </el-form>
@@ -126,12 +122,14 @@ export default {
     return {
       query: {
         page: 1,
-        pageSize: 10
+        pageSize: 5,
+        paperName: ""
       },
       tableData: [],
       selectTotal: 0,
       multipleSelection: [],
       delList: [],
+      delIdList: [],
       editVisible: false,
       addVisible: false,
       form: {
@@ -171,14 +169,26 @@ export default {
       axios
         .post(
           "http://localhost:8080/daoyunWeb/testExample/getPaperByPage",
-          { page: this.query.page, pageSize: this.query.pageSize },
+          {
+            page: this.query.page,
+            pageSize: this.query.pageSize,
+            paperName: this.query.paperName
+          },
           { headers: { "Content-Type": "application/json" } }
         )
         .then(
           res => {
             console.log(res);
             if (res.status == 200) {
-              this.tableData = res.data.data;
+              if (res.data.code == 0) {
+                this.tableData = res.data.data;
+                this.$message.success(res.data.msg);
+              } else if (res.data.code == -2) {
+                this.$router.push('/login');
+                this.$message.error(res.data.msg);
+              } else {
+                this.$message.error(res.data.msg);
+              }
             }
           },
           error => {
@@ -189,7 +199,11 @@ export default {
     getDataCount() {
       //TODO 待加入搜索限定参数
       axios
-        .post("http://localhost:8080/daoyunWeb/testExample/getPaperCount")
+        .post(
+          "http://localhost:8080/daoyunWeb/testExample/getPaperCount",
+          { paperName: this.query.paperName },
+          { headers: { "Content-Type": "application/json" } }
+        )
         .then(
           res => {
             console.log(res);
@@ -218,6 +232,15 @@ export default {
           res => {
             console.log(res);
             if (res.status == 200) {
+              if (res.data.code == 0) {
+                this.getData();
+                this.getDataCount();
+              } else if (res.data.code == -2) {
+                this.$router.push({ path: "/login" });
+                this.$message.error(res.data.msg);
+              } else {
+                this.$message.error(res.data.msg);
+              }
             }
           },
           error => {
@@ -240,6 +263,15 @@ export default {
           res => {
             console.log(res);
             if (res.status == 200) {
+              if (res.data.code == 0) {
+                this.getData();
+                this.getDataCount();
+              } else if (res.data.code == -2) {
+                this.$router.push('/login');
+                this.$message.error(res.data.msg);
+              } else {
+                this.$message.error(res.data.msg);
+              }
             }
           },
           error => {
@@ -248,6 +280,7 @@ export default {
         );
     },
     deletePaper() {
+      console.log(this.form);
       axios
         .post(
           "http://localhost:8080/daoyunWeb/testExample/deletePaperJson/" +
@@ -257,6 +290,42 @@ export default {
           res => {
             console.log(res);
             if (res.status == 200) {
+              if (res.data.code == 0) {
+                this.getData();
+                this.getDataCount();
+              } else if (res.data.code == -2) {
+                this.$router.push('/login');
+                this.$message.error(res.data.msg);
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            }
+          },
+          error => {
+            console.log(error);
+          }
+        );
+    },
+    deletePaperBatch() {
+      axios
+        .post(
+          "http://localhost:8080/daoyunWeb/testExample/deletePaperBatchJson",
+          this.delIdList,
+          { headers: { "Content-Type": "application/json" } }
+        )
+        .then(
+          res => {
+            console.log(res);
+            if (res.status == 200) {
+              if (res.data.code == 0) {
+                this.getData();
+                this.getDataCount();
+              } else if (res.data.code == -2) {
+                this.$router.push('/login');
+                this.$message.error(res.data.msg);
+              } else {
+                this.$message.error(res.data.msg);
+              }
             }
           },
           error => {
@@ -268,17 +337,20 @@ export default {
     handleSearch() {
       this.$set(this.query, "pageIndex", 1);
       this.getData();
+      this.getDataCount();
     },
     // 删除操作
     handleDelete(index, row) {
       // 二次确认删除
+      this.idx = index;
+      this.form = row;
       this.$confirm("确定要删除吗？", "提示", {
         type: "warning"
       })
         .then(() => {
           this.deletePaper();
           this.$message.success("删除成功");
-          this.tableData.splice(index, 1);
+          //this.tableData.splice(index, 1);
         })
         .catch(() => {});
     },
@@ -288,13 +360,19 @@ export default {
     },
     delAllSelection() {
       const length = this.multipleSelection.length;
-      let str = "";
-      this.delList = this.delList.concat(this.multipleSelection);
-      for (let i = 0; i < length; i++) {
-        str += this.multipleSelection[i].name + " ";
+      if (length == 0) {
+        this.$message.error("请至少选中一项！");
+      } else {
+        let str = "";
+        this.delList = this.delList.concat(this.multipleSelection);
+        for (let i = 0; i < length; i++) {
+          str += this.multipleSelection[i].paperName + " ";
+          this.delIdList.push(this.multipleSelection[i].paperId);
+        }
+        this.deletePaperBatch();
+        this.$message.error(`删除了${str}`);
+        this.multipleSelection = [];
       }
-      this.$message.error(`删除了${str}`);
-      this.multipleSelection = [];
     },
     // 编辑操作
     handleEdit(index, row) {
@@ -307,7 +385,7 @@ export default {
       this.editVisible = false;
       this.$message.success(`修改第 ${this.idx + 1} 行成功`);
       this.updatePaper();
-      this.$set(this.tableData, this.idx, this.form);
+      //this.$set(this.tableData, this.idx, this.form);
     },
     // 新增操作
     handleAdd() {
@@ -322,13 +400,13 @@ export default {
     handleDetail(index, row) {
       this.idx = index;
       this.form = row;
-      localStorage.setItem('paperId',this.form.paperId);
-      localStorage.setItem('paperName',this.form.paperName);
-      localStorage.setItem('paperNum',this.form.paperNum);
-      localStorage.setItem('paperDetail',this.form.paperDetail);
+      localStorage.setItem("paperId", this.form.paperId);
+      localStorage.setItem("paperName", this.form.paperName);
+      localStorage.setItem("paperNum", this.form.paperNum);
+      localStorage.setItem("paperDetail", this.form.paperDetail);
       this.$router.push({
         path: "/testdetail",
-        name: "testdetailpage",
+        name: "testdetailpage"
         //params: { paperId: this.form.paperId,paperName: this.form.paperName,paperNum: this.form.paperNum,paperDetail: this.form.paperDetail }
       });
     },
